@@ -1,26 +1,3 @@
-# StockInfoCrawler
-
-```python
-pip install pypiwin32
-```
-
-## Notes
-
-Must set name of spider
-
-### Export csv has blank lines
-
-setting.py
-
-```python
-FEED_EXPORTERS = {
-    'csv': 'PROJECT_NAME_HERE.exporters.FixLineCsvItemExporter',
-}
-```
-
-exporters.py
-
-```python
 import io
 import os
 import six
@@ -64,4 +41,3 @@ class FixLineCsvItemExporter(CsvItemExporter):
             newline="",
         ) if six.PY3 else file
         self.csv_writer = csv.writer(self.stream, **kwargs)
-```

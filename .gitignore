@@ -1,0 +1,4 @@
+StockInfoCrawler/__pycache__/
+StockInfoCrawler/spiders/__pycache__/
+.idea/
+venv/

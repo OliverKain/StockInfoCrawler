@@ -1,0 +1,13 @@
+{
+    "files.exclude": {
+        "*.code-workspace": true,
+        "**/**.vscode": true,
+        "**/**.gitignore": true,
+        "**/**/__init__.py*": true,
+        "**/**/__pycache__*": true,
+        "**/**/migration*": true,
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.encoding": "utf8",
+    "editor.rulers": [100],
+}
