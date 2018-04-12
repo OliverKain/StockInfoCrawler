@@ -42,3 +42,11 @@ class BasicIndexesPowerItem(OrderedDict):
     best_surf = scrapy.Field()
     avg_strength = scrapy.Field()
     pass
+
+class EventDetailItem(OrderedDict):
+    stock_id = scrapy.Field()
+    event_type = scrapy.Field()
+    exec_date = scrapy.Field()
+    diviends = scrapy.Field()
+    note = scrapy.Field()
+    pass
