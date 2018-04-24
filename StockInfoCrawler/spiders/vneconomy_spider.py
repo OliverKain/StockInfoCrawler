@@ -2,7 +2,7 @@
 import scrapy
 import csv
 from scrapy.http import Request
-from addon.no_accent import no_accent_vietnamese
+from commons.no_accent import no_accent_vietnamese
 
 
 class VnEconomySpider(scrapy.Spider):
@@ -14,6 +14,7 @@ class VnEconomySpider(scrapy.Spider):
     time_xpath = "./div//span[@class='infonews-time']/text()"
     init_xpath = "./div//p/text()"
     link_xpath = "./div/h3/a/@href"
+    keyword = ""
 
     # Get keyword
     with open("./input/keyword.csv", "rt", encoding="utf-8") as tmp:
