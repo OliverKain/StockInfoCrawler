@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
+
 import os
+import re
+import numpy
 from scrapy.crawler import CrawlerProcess
 from commons.clean_crawled_data import clean_up_data
 from scrapy.utils.project import get_project_settings
@@ -19,6 +23,7 @@ from StockInfoCrawler.spiders.hnx_disclosure_spider import HnxDisclosureSpider
 clean_up_data()
 
 # Display options
+availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 print("Available crawling: ")
 print("[1]  cophieu68.vn: All Basic Indexes")
 print("[2]  cophieu68.vn: All Basic Index Power")
@@ -29,7 +34,74 @@ print("[6]  scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nướ
 print("[7]  sbv.gov.vn (Ngân Hàng Nhà Nước)")
 print("[8]  taichinhdientu.vn")
 print("[9]  baodientu.chinhphu.vn")
-print("[10] hnx.vn (Thông tin công bố HNX)")
+print("[10] hnx.vn (Thông tin công bố HNX)\n")
+
+# Prompt spiders
+inputOpt = input("Single or mulitple sites? [s/m]:")
+reqOpt = ""
+while inputOpt.lower() != "s" and inputOpt.lower() != "m":
+    inputOpt = input("Please enter suitable option [s/m]:")
+if inputOpt == "s":
+    inputOpt = input("Enter site index [1-" + str(len(availableList)) + "]:")
+    while inputOpt.lower() not in availableList:
+        inputOpt = input("Please enter suitable option [1-" + str(len(availableList)) + "]:")
+    reqOpt = [inputOpt]
+else:
+    inputOpt = input("Enter list of distinct site indexes, seperated by commas [1-" + str(len(availableList)) + "]:")
+    while True:
+        if re.match(r"^\d(,[\d]+)+$", inputOpt):
+            optList = inputOpt.split(",")
+            if len(numpy.unique(optList)) < len(optList):
+                inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+                continue
+            for opt in optList:
+                if opt not in availableList:
+                    inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+                    break
+            reqOpt = optList
+            break
+        else:
+            inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+
+# Prompt using keyword
+inputOpt = input("Using keyword [y/n]:")
+while inputOpt.lower() != "y" and inputOpt.lower() != "n":
+    inputOpt = input("Please enter suitable option [y/n]:")
+
+# Get global project settings
+settings = get_project_settings()
+
+# Create new process
+process = CrawlerProcess(settings)
+
+# Add spiders
+if "1" in reqOpt:
+    process.crawl(BasicIndexesSpider)
+if "2" in reqOpt:
+    process.crawl(BasicIndexesPowerSpider)
+if "3" in reqOpt:
+    process.crawl(EventScheduleSpider)
+if "4" in reqOpt:
+    vneconomySpider = VnEconomySpider()
+    process.crawl(vneconomySpider)
+if "5" in reqOpt:
+    process.crawl(ThoiBaoTaiChinhVietNamSpider)
+if "6" in reqOpt:
+    process.crawl(ScicPortfolioSpider)
+    process.crawl(ScicPressSpider)
+if "7" in reqOpt:
+    process.crawl(SbvSpider)
+if "8" in reqOpt:
+    process.crawl(TaiChinhDienTuSpider)
+if "9" in reqOpt:
+    process.crawl(BaoDienTuChinhPhuSpider)
+if "10" in reqOpt:
+    process.crawl(HnxDisclosureSpider)
+
+# Start crawling
+process.start()
+
+
 # http://theleader.vn
 # http://vietnamfinance.vn
 # http://tapchitaichinh.vn/kinh-te-vi-mo/
@@ -43,27 +115,3 @@ print("[10] hnx.vn (Thông tin công bố HNX)")
 # http://enternews.vn
 # https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1953252732
 
-# Get global project settings
-# settings = get_project_settings()
-
-# Create new process
-# process = CrawlerProcess(settings)
-
-# Get prompts from screen
-
-# Add spiders
-# vneconomySpider = VnEconomySpider()
-# process.crawl(vneconomySpider)
-# process.crawl(BasicIndexesSpider)
-# process.crawl(BasicIndexesPowerSpider)
-# process.crawl(EventScheduleSpider)
-# process.crawl(ScicPortfolioSpider)
-# process.crawl(ScicPressSpider)
-# process.crawl(SbvSpider)
-# process.crawl(ThoiBaoTaiChinhVietNamSpider)
-# process.crawl(TaiChinhDienTuSpider)
-# process.crawl(BaoDienTuChinhPhuSpider)
-# process.crawl(HnxDisclosureSpider)
-
-# Start crawling
-# process.start()
