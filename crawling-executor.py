@@ -1,72 +1,83 @@
 # -*- coding: utf-8 -*-
 
-import os
 import re
+
 import numpy
 from scrapy.crawler import CrawlerProcess
-from commons.clean_crawled_data import clean_up_data
 from scrapy.utils.project import get_project_settings
-from StockInfoCrawler.spiders.basic_indexes_spider import BasicIndexesSpider
+
+from StockInfoCrawler.spiders.baodientuchinhphu_spider import BaoDienTuChinhPhuSpider
 from StockInfoCrawler.spiders.basic_indexes_power_spider import BasicIndexesPowerSpider
+from StockInfoCrawler.spiders.basic_indexes_spider import BasicIndexesSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
-from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
+from StockInfoCrawler.spiders.hnx_disclosure_spider import HnxDisclosureSpider
+from StockInfoCrawler.spiders.sbv_spider import SbvSpider
 from StockInfoCrawler.spiders.scic_portfolio_spider import ScicPortfolioSpider
 from StockInfoCrawler.spiders.scic_press_spider import ScicPressSpider
-from StockInfoCrawler.spiders.sbv_spider import SbvSpider
-from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChinhVietNamSpider
 from StockInfoCrawler.spiders.taichinhdientu_spider import TaiChinhDienTuSpider
-from StockInfoCrawler.spiders.baodientuchinhphu_spider import BaoDienTuChinhPhuSpider
-from StockInfoCrawler.spiders.hnx_disclosure_spider import HnxDisclosureSpider
-
+from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChinhVietNamSpider
+from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
+from commons.clean_crawled_data import clean_up_data
 
 # Clean up data folder
 clean_up_data()
 
 # Display options
-availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-print("Available crawling: ")
-print("[1]  cophieu68.vn: All Basic Indexes")
-print("[2]  cophieu68.vn: All Basic Index Power")
-print("[3]  cophieu68.vn: All Event Schedule")
-print("[4]  vneconomy.vn")
-print("[5]  thoibaotaichinhvietnam.vn")
-print("[6]  scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)")
-print("[7]  sbv.gov.vn (Ngân Hàng Nhà Nước)")
-print("[8]  taichinhdientu.vn")
-print("[9]  baodientu.chinhphu.vn")
-print("[10] hnx.vn (Thông tin công bố HNX)\n")
+inputOpt = input("Stats or News? [s/n]:")
+while inputOpt.lower() != "s" and inputOpt.lower() != "n":
+    inputOpt = input("Please enter suitable option [s/n]:")
 
-# Prompt spiders
-inputOpt = input("Single or mulitple sites? [s/m]:")
-reqOpt = ""
-while inputOpt.lower() != "s" and inputOpt.lower() != "m":
-    inputOpt = input("Please enter suitable option [s/m]:")
+# Stats
 if inputOpt == "s":
-    inputOpt = input("Enter site index [1-" + str(len(availableList)) + "]:")
-    while inputOpt.lower() not in availableList:
-        inputOpt = input("Please enter suitable option [1-" + str(len(availableList)) + "]:")
-    reqOpt = [inputOpt]
-else:
-    inputOpt = input("Enter list of distinct site indexes, seperated by commas [1-" + str(len(availableList)) + "]:")
-    while True:
-        if re.match(r"^\d(,[\d]+)+$", inputOpt):
-            optList = inputOpt.split(",")
-            if len(numpy.unique(optList)) < len(optList):
-                inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
-                continue
-            for opt in optList:
-                if opt not in availableList:
-                    inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
-                    break
-            reqOpt = optList
-            break
-        else:
-            inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+    reqOpt = ["999"]
 
-# Prompt using keyword
-inputOpt = input("Using keyword [y/n]:")
-while inputOpt.lower() != "y" and inputOpt.lower() != "n":
-    inputOpt = input("Please enter suitable option [y/n]:")
+# News
+else:
+    availableList = ["1", "2", "3", "4", "5", "6", "7"]
+    print("Available crawling: ")
+    print("[1]  vneconomy.vn")
+    print("[2]  thoibaotaichinhvietnam.vn")
+    print("[3]  scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)")
+    print("[4]  sbv.gov.vn (Ngân Hàng Nhà Nước)")
+    print("[5]  taichinhdientu.vn")
+    print("[6]  baodientu.chinhphu.vn")
+    print("[7]  hnx.vn (Thông tin công bố HNX)\n")
+
+    # Prompt spiders
+    inputOpt = input("Single or multiple sites? [s/m]:")
+    reqOpt = ""
+    while inputOpt.lower() != "s" and inputOpt.lower() != "m":
+        inputOpt = input("Please enter suitable option [s/m]:")
+    if inputOpt == "s":
+        inputOpt = input("Enter site index [1-" + str(len(availableList)) + "]:")
+        while inputOpt.lower() not in availableList:
+            inputOpt = input("Please enter suitable option [1-" + str(len(availableList)) + "]:")
+        reqOpt = [inputOpt]
+    else:
+        inputOpt = input("Enter list of distinct site indexes, separated by commas [1-" + str(len(availableList)) + "]:")
+        while True:
+            if re.match(r"^\d(,[\d]+)+$", inputOpt):
+                optList = inputOpt.split(",")
+                if len(numpy.unique(optList)) < len(optList):
+                    # Has duplicate options
+                    inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+                    continue
+                for opt in optList:
+                    if opt not in availableList:
+                        # Invalid options
+                        inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+                        break
+                reqOpt = optList
+                break
+            else:
+                # Invalid list
+                inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+
+    # TODO
+    # # Prompt using keyword
+    # inputOpt = input("Using keyword [y/n]:")
+    # while inputOpt.lower() != "y" and inputOpt.lower() != "n":
+    #     inputOpt = input("Please enter suitable option [y/n]:")
 
 # Get global project settings
 settings = get_project_settings()
@@ -75,27 +86,29 @@ settings = get_project_settings()
 process = CrawlerProcess(settings)
 
 # Add spiders
-if "1" in reqOpt:
+# Stats
+# TODO single stock_id stats
+if "999" in reqOpt:
     process.crawl(BasicIndexesSpider)
-if "2" in reqOpt:
-    process.crawl(BasicIndexesPowerSpider)
-if "3" in reqOpt:
     process.crawl(EventScheduleSpider)
-if "4" in reqOpt:
+    process.crawl(BasicIndexesPowerSpider)
+
+# News
+if "1" in reqOpt:
     vneconomySpider = VnEconomySpider()
     process.crawl(vneconomySpider)
-if "5" in reqOpt:
+if "2" in reqOpt:
     process.crawl(ThoiBaoTaiChinhVietNamSpider)
-if "6" in reqOpt:
+if "3" in reqOpt:
     process.crawl(ScicPortfolioSpider)
     process.crawl(ScicPressSpider)
-if "7" in reqOpt:
+if "4" in reqOpt:
     process.crawl(SbvSpider)
-if "8" in reqOpt:
+if "5" in reqOpt:
     process.crawl(TaiChinhDienTuSpider)
-if "9" in reqOpt:
+if "6" in reqOpt:
     process.crawl(BaoDienTuChinhPhuSpider)
-if "10" in reqOpt:
+if "7" in reqOpt:
     process.crawl(HnxDisclosureSpider)
 
 # Start crawling

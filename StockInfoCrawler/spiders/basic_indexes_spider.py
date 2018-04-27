@@ -12,7 +12,7 @@ class BasicIndexesSpider(scrapy.Spider):
     start_urls = ['http://www.cophieu68.vn/companylist2.php']
     custom_settings = {
         'FEED_FORMAT': 'csv',
-        'FEED_URI' : 'data/basic-indexes.csv',
+        'FEED_URI': 'data/stats/basic-indexes.csv',
     }
 
     def parse(self, response):
