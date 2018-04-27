@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import re
-
+import csv
 import numpy
+
+from commons.clean_crawled_data import clean_up_data
+
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
@@ -17,7 +20,9 @@ from StockInfoCrawler.spiders.scic_press_spider import ScicPressSpider
 from StockInfoCrawler.spiders.taichinhdientu_spider import TaiChinhDienTuSpider
 from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChinhVietNamSpider
 from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
-from commons.clean_crawled_data import clean_up_data
+
+# Global variable
+keyword = []
 
 # Clean up data folder
 clean_up_data()
@@ -27,12 +32,11 @@ inputOpt = input("Stats or News? [s/n]:")
 while inputOpt.lower() != "s" and inputOpt.lower() != "n":
     inputOpt = input("Please enter suitable option [s/n]:")
 
-# Stats
 if inputOpt == "s":
+    # Stats
     reqOpt = ["999"]
-
-# News
 else:
+    # News
     availableList = ["1", "2", "3", "4", "5", "6", "7"]
     print("Available crawling: ")
     print("[1]  vneconomy.vn")
@@ -73,11 +77,29 @@ else:
                 # Invalid list
                 inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
 
-    # TODO
-    # # Prompt using keyword
-    # inputOpt = input("Using keyword [y/n]:")
-    # while inputOpt.lower() != "y" and inputOpt.lower() != "n":
-    #     inputOpt = input("Please enter suitable option [y/n]:")
+    # TODO Prompt using keyword
+    # Prompt using keyword
+    inputOpt = input("Using keyword [y/n]:")
+    while inputOpt.lower() != "y" and inputOpt.lower() != "n":
+        inputOpt = input("Please enter suitable option [y/n]:")
+    if inputOpt == "y":
+        # Prompt using predefined keywords
+        inputOpt = input("Using predefined keywords [y/n]:")
+        while inputOpt.lower() != "y" and inputOpt.lower() != "n":
+            inputOpt = input("Please enter suitable option [y/n]:")
+        if inputOpt == "y":
+            # Reading keywords
+            with open("./input/keyword.csv", "rt", encoding="utf-8") as tmp:
+                reader = csv.reader(tmp)
+                for row in reader:
+                    keyword.append(str(row[0]))
+        else:
+            # Manual adding keywords
+            while True:
+                inputOpt = input("Enter keywords, finish adding keywords by typing \"end\":")
+                if inputOpt.lower() == "end":
+                    break
+                keyword.append(inputOpt)
 
 # Get global project settings
 settings = get_project_settings()
@@ -95,8 +117,7 @@ if "999" in reqOpt:
 
 # News
 if "1" in reqOpt:
-    vneconomySpider = VnEconomySpider()
-    process.crawl(vneconomySpider)
+    process.crawl(VnEconomySpider, kw=keyword)
 if "2" in reqOpt:
     process.crawl(ThoiBaoTaiChinhVietNamSpider)
 if "3" in reqOpt:

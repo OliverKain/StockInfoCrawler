@@ -3,6 +3,7 @@ import scrapy
 
 
 class HnxDisclosureSpider(scrapy.Spider):
+    # TODO Iterate pages
     name = "hnx-disclosure-spider"
 
     # Crawling Info

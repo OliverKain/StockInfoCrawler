@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import csv
 from scrapy.http import Request
 from commons.no_accent import no_accent_vietnamese
 
@@ -14,14 +13,7 @@ class VnEconomySpider(scrapy.Spider):
     time_xpath = "./div//span[@class='infonews-time']/text()"
     init_xpath = "./div//p/text()"
     link_xpath = "./div/h3/a/@href"
-    keyword = ""
-
-    # Get keyword
-    with open("./input/keyword.csv", "rt", encoding="utf-8") as tmp:
-        reader = csv.reader(tmp)
-        for row in reader:
-            keyword = str(row[0])
-
+    keyword = []
     start_urls = ["http://vneconomy.vn/timeline/9920/trang-1.htm",
                   "http://vneconomy.vn/timeline/6/trang-1.htm",
                   "http://vneconomy.vn/timeline/7/trang-1.htm",
@@ -42,27 +34,32 @@ class VnEconomySpider(scrapy.Spider):
                   "http://vneconomy.vn/timeline/5/trang-3.htm",
                   "http://vneconomy.vn/timeline/17/trang-3.htm",
                   "http://vneconomy.vn/timeline/19/trang-3.htm",
-                  "http://vneconomy.vn/timeline/99/trang-4.htm",
-                  "http://vneconomy.vn/timeline/9920/trang-4.htm",
-                  "http://vneconomy.vn/timeline/6/trang-4.htm",
-                  "http://vneconomy.vn/timeline/7/trang-4.htm",
-                  "http://vneconomy.vn/timeline/5/trang-4.htm",
-                  "http://vneconomy.vn/timeline/17/trang-4.htm",
-                  "http://vneconomy.vn/timeline/19/trang-4.htm",
-                  "http://vneconomy.vn/timeline/99/trang-4.htm",
-                  "http://vneconomy.vn/timeline/9920/trang-5.htm",
-                  "http://vneconomy.vn/timeline/6/trang-5.htm",
-                  "http://vneconomy.vn/timeline/7/trang-5.htm",
-                  "http://vneconomy.vn/timeline/5/trang-5.htm",
-                  "http://vneconomy.vn/timeline/17/trang-5.htm",
-                  "http://vneconomy.vn/timeline/19/trang-5.htm",
-                  "http://vneconomy.vn/timeline/99/trang-5.htm"]
+                #   "http://vneconomy.vn/timeline/99/trang-4.htm",
+                #   "http://vneconomy.vn/timeline/9920/trang-4.htm",
+                #   "http://vneconomy.vn/timeline/6/trang-4.htm",
+                #   "http://vneconomy.vn/timeline/7/trang-4.htm",
+                #   "http://vneconomy.vn/timeline/5/trang-4.htm",
+                #   "http://vneconomy.vn/timeline/17/trang-4.htm",
+                #   "http://vneconomy.vn/timeline/19/trang-4.htm",
+                #   "http://vneconomy.vn/timeline/99/trang-4.htm",
+                #   "http://vneconomy.vn/timeline/9920/trang-5.htm",
+                #   "http://vneconomy.vn/timeline/6/trang-5.htm",
+                #   "http://vneconomy.vn/timeline/7/trang-5.htm",
+                #   "http://vneconomy.vn/timeline/5/trang-5.htm",
+                #   "http://vneconomy.vn/timeline/17/trang-5.htm",
+                #   "http://vneconomy.vn/timeline/19/trang-5.htm",
+                #   "http://vneconomy.vn/timeline/99/trang-5.htm"
+                  ]
     custom_settings = {
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/vneconomy.csv",
     }
-    if keyword:
-        custom_settings["FEED_URI"] = "data/vneconomy_[" + no_accent_vietnamese(keyword) + "].csv"
+
+    def __init__(self, kw=None, **kwargs):
+        self.keyword = kw
+        if self.keyword:
+            self.custom_settings["FEED_URI"] = "data/vneconomy_refined.csv"
+        super().__init__(**kwargs)
 
     def parse(self, response):
         article_list_xpath = "//li"
@@ -82,14 +79,22 @@ class VnEconomySpider(scrapy.Spider):
 
     @staticmethod
     def examine_article(response):
+        keywordList = response.meta.get("keyword")
         article_content_xpath = "//div[@class='contentdetail']/p"
         article_content = response.selector.xpath(article_content_xpath)
-        for paragraph in article_content:
-            keyword = str(response.meta.get("keyword"))
-            paragraph_content = str(paragraph.xpath("./text()").extract_first())
-            if paragraph_content.find(keyword) != -1:
-                article_detail = response.meta.get("article_detail")
-                article_detail["paraContainKeyword"] = paragraph_content
-                yield article_detail
+        matchFlg = False
+        for kw in keywordList:
+            for paragraph in article_content:
+                paragraph_content = str(paragraph.xpath(".//text()").extract_first())
+                if paragraph_content.find(kw) != -1:
+                    # Keyword found
+                    matchFlg = True
+                    break
+                # Keyword not found
+                matchFlg = False
+            # Article did not have a keyword
+            if not matchFlg:
                 break
-        pass
+        if matchFlg:
+            yield response.meta.get("article_detail")
+            pass
