@@ -4,7 +4,7 @@ from scrapy.http import Request
 
 
 class VietnamFinanceSpider(scrapy.Spider):
-    name = "theleader-spider"
+    name = "vietnamfinance-spider"
 
     # Crawling Info
     target_root = "http://vietnamfinance.vn"

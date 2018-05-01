@@ -31,17 +31,18 @@ keyword = []
 clean_up_data()
 
 # Display options
-inputOpt = input("Stats or News? [s/n]:")
+inputOpt = input("Chỉ số cơ bản(s) hay tin tức(n)? [s/n]:")
 while inputOpt.lower() != "s" and inputOpt.lower() != "n":
-    inputOpt = input("Please enter suitable option [s/n]:")
+    inputOpt = input("Hãy nhập lại lựa chọn [s/n]:")
 
+# Stats
 if inputOpt == "s":
-    # Stats
     reqOpt = ["999"]
+
+# News
 else:
-    # News
     availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    print("Available crawling: ")
+    print("Lựa chọn hiện có: ")
     print("[1]  vneconomy.vn")
     print("[2]  thoibaotaichinhvietnam.vn")
     print("[3]  scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)")
@@ -53,54 +54,61 @@ else:
     print("[9]  vietnamfinance.vn\n")
 
     # Prompt spiders
-    inputOpt = input("Single or multiple sites? [s/m]:")
+    inputOpt = input("Một(s) hay nhiều(m) hay toàn bộ các trang(a)? [s/m/a]:")
     reqOpt = ""
-    while inputOpt.lower() != "s" and inputOpt.lower() != "m":
-        inputOpt = input("Please enter suitable option [s/m]:")
+    while inputOpt.lower() != "s" and inputOpt.lower() != "m" and inputOpt.lower() != "a":
+        inputOpt = input("Hãy nhập lại lựa chọn [s/m/a]:")
+    # Single site
     if inputOpt == "s":
-        inputOpt = input("Enter site index [1-" + str(len(availableList)) + "]:")
+        inputOpt = input("Hãy nhập lựa chọn của bạn [1-" + str(len(availableList)) + "]:")
         while inputOpt.lower() not in availableList:
-            inputOpt = input("Please enter suitable option [1-" + str(len(availableList)) + "]:")
+            inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
         reqOpt = [inputOpt]
-    else:
-        inputOpt = input("Enter list of distinct site indexes, separated by commas [1-"+str(len(availableList))+"]:")
+    # Multiple sites
+    elif inputOpt == "m":
+        inputOpt = input("Hãy nhập danh sách các website muốn lấy, cách nhau bởi dấu phẩy[1-{0}]:"
+                            .format(str(len(availableList))))
         while True:
             if re.match(r"^\d(,[\d]+)+$", inputOpt):
                 optList = inputOpt.split(",")
                 if len(numpy.unique(optList)) < len(optList):
                     # Has duplicate options
-                    inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+                    inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
                     continue
                 for opt in optList:
                     if opt not in availableList:
                         # Invalid options
-                        inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+                        inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
                         break
                 reqOpt = optList
                 break
             else:
                 # Invalid list
-                inputOpt = input("Please enter valid list [1-" + str(len(availableList)) + "]:")
+                inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
+    # All sites
+    else:
+        reqOpt = availableList
 
     # Prompt using keyword
-    inputOpt = input("Using keyword [y/n]:")
+    inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
     while inputOpt.lower() != "y" and inputOpt.lower() != "n":
-        inputOpt = input("Please enter suitable option [y/n]:")
+        inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
+    # Using keywords
     if inputOpt == "y":
-        # Prompt using predefined keywords
-        inputOpt = input("Using predefined keywords [y/n]:")
+        inputOpt = input("Có sử dụng các keyword đã định nghĩa sẵn trong input/keyword.csv? [y/n]:")
         while inputOpt.lower() != "y" and inputOpt.lower() != "n":
-            inputOpt = input("Please enter suitable option [y/n]:")
+            inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
+        # Using predefined keywords
         if inputOpt == "y":
-            # Reading keywords
             with open("./input/keyword.csv", "rt", encoding="utf-8") as tmp:
                 reader = csv.reader(tmp)
                 for row in reader:
                     keyword.append(str(row[0]))
+        # Manual adding keywords
         else:
-            # Manual adding keywords
             while True:
-                inputOpt = input("Enter keywords, finish adding keywords by typing \"end\":")
+                inputOpt = input("Hãy nhập các keyword, kết thúc keyword bằng Enter,"
+                                  + "hoàn thành việc nhập bằng cách nhập từ \"end\":")
                 if inputOpt.lower() == "end":
                     break
                 keyword.append(inputOpt)
@@ -124,23 +132,23 @@ if "1" in reqOpt:
     vneconomy_spider = VnEconomySpider(kw=keyword)
     process.crawl(vneconomy_spider, kw=keyword)
 if "2" in reqOpt:
-    # TODO iterate sub-menu
+    # TODO iterate sub-menu, 1 exported file
     process.crawl(ThoiBaoTaiChinhVietNamSpider)
 if "3" in reqOpt:
-    # TODO iterate sub-menu
+    # TODO iterate sub-menu, 1 exported file
     process.crawl(ScicPortfolioSpider)
     process.crawl(ScicPressSpider)
 if "4" in reqOpt:
-    # TODO iterate sub-menu
+    # TODO iterate sub-menu, 1 exported file
     process.crawl(SbvSpider)
 if "5" in reqOpt:
-    # TODO iterate sub-menu
+    # TODO iterate sub-menu, 1 exported file
     process.crawl(TaiChinhDienTuSpider)
 if "6" in reqOpt:
-    # TODO iterate sub-menu
+    # TODO iterate sub-menu, 1 exported file
     process.crawl(BaoDienTuChinhPhuSpider)
 if "7" in reqOpt:
-    # TODO iterate sub-menu + paging
+    # TODO iterate sub-menu + paging, 1 exported file
     process.crawl(HnxDisclosureSpider)
 if "8" in reqOpt:
     theleader_spider = TheLeaderSpider(kw=keyword)
@@ -152,7 +160,6 @@ if "9" in reqOpt:
 # Start crawling
 process.start()
 
-
 # http://tapchitaichinh.vn/kinh-te-vi-mo/
 # http://tapchitaichinh.vn/thi-truong-tai-chinh/
 # http://kinhtevn.com.vn
@@ -162,3 +169,6 @@ process.start()
 # http://baochinhphu.vn/Kinh-te/7.vgp
 # http://enternews.vn
 # https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1953252732
+# https://www.bloomberg.com/search?query=vietnam
+# https://www.dealstreetasia.com/countries/vietnam/
+# https://www.dealstreetasia.com/countries/vietnam/
