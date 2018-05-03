@@ -172,3 +172,7 @@ process.start()
 # https://www.bloomberg.com/search?query=vietnam
 # https://www.dealstreetasia.com/countries/vietnam/
 # https://www.dealstreetasia.com/countries/vietnam/
+# http://forbesvietnam.com.vn/
+# http://www.thesaigontimes.vn/kinhdoanh/
+# http://baocongthuong.com.vn/thuong-mai
+# http://nhipcaudautu.vn/
