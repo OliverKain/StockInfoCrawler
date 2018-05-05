@@ -4,3 +4,5 @@ StockInfoCrawler/spiders/__pycache__/
 venv/
 
 data/
+
+input/
