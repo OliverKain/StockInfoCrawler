@@ -9,19 +9,23 @@ from commons.clean_crawled_data import clean_up_data
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
+from StockInfoCrawler.spiders.baocongthuong_spider import BaoCongThuongSpider
 from StockInfoCrawler.spiders.baodientuchinhphu_spider import BaoDienTuChinhPhuSpider
 from StockInfoCrawler.spiders.basic_indexes_power_spider import BasicIndexesPowerSpider
 from StockInfoCrawler.spiders.basic_indexes_spider import BasicIndexesSpider
+from StockInfoCrawler.spiders.bloomberg_spider import BloombergSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
+from StockInfoCrawler.spiders.forbesvietnam_spider import ForbesVietNamSpider
 from StockInfoCrawler.spiders.hnx_disclosure_spider import HnxDisclosureSpider
+from StockInfoCrawler.spiders.nguoitieudung_spider import NguoiTieuDungSpider
 from StockInfoCrawler.spiders.sbv_spider import SbvSpider
 from StockInfoCrawler.spiders.scic_portfolio_spider import ScicPortfolioSpider
 from StockInfoCrawler.spiders.scic_press_spider import ScicPressSpider
 from StockInfoCrawler.spiders.taichinhdientu_spider import TaiChinhDienTuSpider
-from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChinhVietNamSpider
-from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 from StockInfoCrawler.spiders.theleader_spider import TheLeaderSpider
+from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChinhVietNamSpider
 from StockInfoCrawler.spiders.vietnamfinance_spider import VietnamFinanceSpider
+from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 
 
 # Global variable
@@ -41,7 +45,7 @@ if inputOpt == "s":
 
 # News
 else:
-    availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"]
     print("Lựa chọn hiện có: ")
     print("[1]  vneconomy.vn")
     print("[2]  thoibaotaichinhvietnam.vn")
@@ -51,7 +55,12 @@ else:
     print("[6]  baodientu.chinhphu.vn")
     print("[7]  hnx.vn (Thông tin công bố HNX)")
     print("[8]  theleader.vn")
-    print("[9]  vietnamfinance.vn\n")
+    print("[9]  vietnamfinance.vn")
+    print("[10] nguoitieudung.com.vn")
+    print("[11] baocongthuong.com.vn")
+    print("[12] forbesvietnam.com.vn")
+    print("[13] bloomberg.com")
+    print("\n")
 
     # Prompt spiders
     inputOpt = input("Một(s) hay nhiều(m) hay toàn bộ các trang(a)? [s/m/a]:")
@@ -88,6 +97,8 @@ else:
     # All sites
     else:
         reqOpt = availableList
+        # TODO some available website
+        reqOpt = ["1", "2", "8", "9", "10", "11", "12", "13"]
 
     # Prompt using keyword
     inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
@@ -132,8 +143,8 @@ if "1" in reqOpt:
     vneconomy_spider = VnEconomySpider(kw=keyword)
     process.crawl(vneconomy_spider, kw=keyword)
 if "2" in reqOpt:
-    # TODO iterate sub-menu, 1 exported file
-    process.crawl(ThoiBaoTaiChinhVietNamSpider)
+    thoibaotaichinhvietnam_spider = ThoiBaoTaiChinhVietNamSpider(kw=keyword)
+    process.crawl(thoibaotaichinhvietnam_spider, kw=keyword)
 if "3" in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     process.crawl(ScicPortfolioSpider)
@@ -156,6 +167,20 @@ if "8" in reqOpt:
 if "9" in reqOpt:
     vietnamfinance_spider = VietnamFinanceSpider(kw=keyword)
     process.crawl(vietnamfinance_spider, kw=keyword)
+if "10" in reqOpt:
+    # TODO Entire page?
+    nguoitieudung_spider = NguoiTieuDungSpider(kw=keyword)
+    process.crawl(nguoitieudung_spider, kw=keyword)
+if "11" in reqOpt:
+    # TODO Entire page?
+    baocongthuong_spider = BaoCongThuongSpider(kw=keyword)
+    process.crawl(baocongthuong_spider, kw=keyword)
+if "12" in reqOpt:
+    forbesvietnam_spider = ForbesVietNamSpider(kw=keyword)
+    process.crawl(forbesvietnam_spider, kw=keyword)
+if "13" in reqOpt:
+    bloomberg_spider = BloombergSpider(kw=keyword)
+    process.crawl(bloomberg_spider, kw=keyword)
 
 # Start crawling
 process.start()
@@ -164,15 +189,10 @@ process.start()
 # http://tapchitaichinh.vn/thi-truong-tai-chinh/
 # http://kinhtevn.com.vn
 # http://nhipcaudautu.vn
-# http://www.thesaigontimes.vn
 # http://www.ssc.gov.vn/ubck/faces/vi/vimenu/vipages_vitintucsukien/phathanh?_afrWindowId=y2lp9w8o6_70&_afrLoop=22847863432695794&_afrWindowMode=0&_adf.ctrl-state=1azrsvakbj_4#%40%3F_afrWindowId%3Dy2lp9w8o6_70%26_afrLoop%3D22847863432695794%26_afrWindowMode%3D0%26_adf.ctrl-state%3Dy2lp9w8o6_90
-# http://baochinhphu.vn/Kinh-te/7.vgp
 # http://enternews.vn
 # https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1953252732
+
 # https://www.bloomberg.com/search?query=vietnam
 # https://www.dealstreetasia.com/countries/vietnam/
-# https://www.dealstreetasia.com/countries/vietnam/
-# http://forbesvietnam.com.vn/
 # http://www.thesaigontimes.vn/kinhdoanh/
-# http://baocongthuong.com.vn/thuong-mai
-# http://nhipcaudautu.vn/
