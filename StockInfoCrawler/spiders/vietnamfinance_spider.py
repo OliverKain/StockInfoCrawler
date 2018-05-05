@@ -114,7 +114,7 @@ class VietnamFinanceSpider(scrapy.Spider):
                               "link": self.target_root + article_link
                               }
             if self.keyword:
-                yield Request(url=(self.target_root + article_link), callback=self.examine_article,
+                yield Request(url=article_link, callback=self.examine_article,
                                meta={"article_detail": article_detail,
                                      "keyword": self.keyword})
             else:
