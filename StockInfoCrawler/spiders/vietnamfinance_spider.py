@@ -85,7 +85,7 @@ class VietnamFinanceSpider(scrapy.Spider):
                               "intro": "",
                               "link": self.target_root + top_link}
             if self.keyword:
-                yield Request(url=(self.target_root + top_link), callback=self.examine_article,
+                yield Request(url=top_link, callback=self.examine_article,
                                meta={"article_detail": article_detail,
                                      "keyword": self.keyword})
             else:
@@ -99,7 +99,7 @@ class VietnamFinanceSpider(scrapy.Spider):
                                   "link": self.target_root + item_link
                                   }
                 if self.keyword:
-                    yield Request(url=(self.target_root + item_link), callback=self.examine_article,
+                    yield Request(url=item_link, callback=self.examine_article,
                                    meta={"article_detail": article_detail,
                                          "keyword": self.keyword})
                 else:
