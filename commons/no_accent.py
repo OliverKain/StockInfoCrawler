@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import re
 
 
@@ -18,5 +17,4 @@ def no_accent_vietnamese(s):
     s = re.sub("[ỲÝỴỶỸ]", 'Y', s)
     s = re.sub("[Đ]", 'D', s)
     s = re.sub("[đ]", 'd', s)
-    # s = re.sub(' ', '_', s)
     return s

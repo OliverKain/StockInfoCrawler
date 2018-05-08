@@ -111,7 +111,7 @@ else:
             inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
         # Using predefined keywords
         if inputOpt == "y":
-            with open("./input/keyword.csv", "rt", encoding="utf-8") as tmp:
+            with open("./input/keywords.csv", "rt", encoding="utf-8") as tmp:
                 reader = csv.reader(tmp)
                 for row in reader:
                     keyword.append(str(row[0]))
@@ -192,7 +192,15 @@ process.start()
 # http://www.ssc.gov.vn/ubck/faces/vi/vimenu/vipages_vitintucsukien/phathanh?_afrWindowId=y2lp9w8o6_70&_afrLoop=22847863432695794&_afrWindowMode=0&_adf.ctrl-state=1azrsvakbj_4#%40%3F_afrWindowId%3Dy2lp9w8o6_70%26_afrLoop%3D22847863432695794%26_afrWindowMode%3D0%26_adf.ctrl-state%3Dy2lp9w8o6_90
 # http://enternews.vn
 # https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1953252732
+# http://www.thesaigontimes.vn/kinhdoanh/
 
 # https://www.bloomberg.com/search?query=vietnam
 # https://www.dealstreetasia.com/countries/vietnam/
-# http://www.thesaigontimes.vn/kinhdoanh/
+# https://www.bloomberg.com/markets
+# https://www.bloomberg.com/businessweek
+# https://www.cnbc.com/economy/
+# https://www.cnbc.com/finance/
+# https://www.cnbc.com/investing/
+# https://www.cnbc.com/make-it/money/
+# https://www.reuters.com/finance/markets
+# https://www.nytimes.com/section/business/dealbook?action=click&contentCollection=Business%2FDealBook&contentPlacement=2&module=SectionsNav&pgtype=sectionfront&region=TopBar&version=BrowseTree
