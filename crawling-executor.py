@@ -14,6 +14,7 @@ from StockInfoCrawler.spiders.baodientuchinhphu_spider import BaoDienTuChinhPhuS
 from StockInfoCrawler.spiders.basic_indexes_power_spider import BasicIndexesPowerSpider
 from StockInfoCrawler.spiders.basic_indexes_spider import BasicIndexesSpider
 from StockInfoCrawler.spiders.bloomberg_spider import BloombergSpider
+from StockInfoCrawler.spiders.cnbc_spider import CNBCSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
 from StockInfoCrawler.spiders.forbesvietnam_spider import ForbesVietNamSpider
 from StockInfoCrawler.spiders.hnx_disclosure_spider import HnxDisclosureSpider
@@ -29,6 +30,7 @@ from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 
 
 # Global variable
+is_debug = True
 keyword = []
 
 # Clean up data folder
@@ -45,7 +47,7 @@ if inputOpt == "s":
 
 # News
 else:
-    availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"]
+    availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]
     print("Lựa chọn hiện có: ")
     print("[1]  vneconomy.vn")
     print("[2]  thoibaotaichinhvietnam.vn")
@@ -59,46 +61,53 @@ else:
     print("[10] nguoitieudung.com.vn")
     print("[11] baocongthuong.com.vn")
     print("[12] forbesvietnam.com.vn")
-    print("[13] bloomberg.com")
+    print("[13] bloomberg.com/search?query=vietnam")
+    print("[14] cnbc.com")
     print("\n")
 
     # Prompt spiders
-    inputOpt = input("Một(s) hay nhiều(m) hay toàn bộ các trang(a)? [s/m/a]:")
-    reqOpt = ""
-    while inputOpt.lower() != "s" and inputOpt.lower() != "m" and inputOpt.lower() != "a":
-        inputOpt = input("Hãy nhập lại lựa chọn [s/m/a]:")
-    # Single site
-    if inputOpt == "s":
-        inputOpt = input("Hãy nhập lựa chọn của bạn [1-" + str(len(availableList)) + "]:")
-        while inputOpt.lower() not in availableList:
-            inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
-        reqOpt = [inputOpt]
-    # Multiple sites
-    elif inputOpt == "m":
-        inputOpt = input("Hãy nhập danh sách các website muốn lấy, cách nhau bởi dấu phẩy[1-{0}]:"
-                            .format(str(len(availableList))))
-        while True:
-            if re.match(r"^\d(,[\d]+)+$", inputOpt):
-                optList = inputOpt.split(",")
-                if len(numpy.unique(optList)) < len(optList):
-                    # Has duplicate options
-                    inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
-                    continue
-                for opt in optList:
-                    if opt not in availableList:
-                        # Invalid options
+    if is_debug:
+        # TODO Debug Mode
+        inputOpt = input("Một(s) hay nhiều(m) hay toàn bộ các trang(a)? [s/m/a]:")
+        reqOpt = ""
+        while inputOpt.lower() != "s" and inputOpt.lower() != "m" and inputOpt.lower() != "a":
+            inputOpt = input("Hãy nhập lại lựa chọn [s/m/a]:")
+        # Single site
+        if inputOpt == "s":
+            inputOpt = input("Hãy nhập lựa chọn của bạn [1-" + str(len(availableList)) + "]:")
+            while inputOpt.lower() not in availableList:
+                inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
+            reqOpt = [inputOpt]
+        # Multiple sites
+        elif inputOpt == "m":
+            inputOpt = input("Hãy nhập danh sách các website muốn lấy, cách nhau bởi dấu phẩy[1-{0}]:"
+                                .format(str(len(availableList))))
+            while True:
+                if re.match(r"^\d(,[\d]+)+$", inputOpt):
+                    optList = inputOpt.split(",")
+                    if len(numpy.unique(optList)) < len(optList):
+                        # Has duplicate options
                         inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
-                        break
-                reqOpt = optList
-                break
-            else:
-                # Invalid list
-                inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
-    # All sites
+                        continue
+                    for opt in optList:
+                        if opt not in availableList:
+                            # Invalid options
+                            inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
+                            break
+                    reqOpt = optList
+                    break
+                else:
+                    # Invalid list
+                    inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
+        # All sites
+        else:
+            reqOpt = availableList
+            reqOpt = ["1", "2", "8", "9", "10", "11", "12"]
     else:
         reqOpt = availableList
         # TODO some available website
-        reqOpt = ["1", "2", "8", "9", "10", "11", "12", "13"]
+        reqOpt = ["1", "2", "8", "9", "10", "11", "12"]
+
 
     # Prompt using keyword
     inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
@@ -181,6 +190,9 @@ if "12" in reqOpt:
 if "13" in reqOpt:
     bloomberg_spider = BloombergSpider(kw=keyword)
     process.crawl(bloomberg_spider, kw=keyword)
+if "14" in reqOpt:
+    cnbc_spider = CNBCSpider(kw=keyword)
+    process.crawl(cnbc_spider, kw=keyword)
 
 # Start crawling
 process.start()
