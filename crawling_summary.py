@@ -18,10 +18,11 @@ for csvfile in glob.glob("data/*.csv"):
     with open(csvfile, 'rt', encoding='utf8') as f:
         reader = csv.reader(f)
         data = list(reader)
-        header = data.pop(0)
-        # sort
-        data.sort(key=operator.itemgetter(1), reverse=True)
-        data.insert(0, header)
+        if len(data) > 0:
+            header = data.pop(0)
+            # sort
+            data.sort(key=operator.itemgetter(1), reverse=True)
+            data.insert(0, header)
         for r, row in enumerate(data):
             for c, col in enumerate(row):
                 worksheet.write(r, c, col)

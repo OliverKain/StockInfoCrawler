@@ -112,10 +112,11 @@ else:
         reqOpt = ""
         while inputOpt.lower() != "v" and inputOpt.lower() != "w":
             inputOpt = input("Hãy nhập lại lựa chọn [v/w]:")
-        # VN News
         if inputOpt == "v":
+            # VN News
             reqOpt = ["1", "2", "3", "8", "9", "10", "11", "12"]
         else:
+            # World News
             reqOpt = ["14", "15"]
 
     # Prompt using keyword
