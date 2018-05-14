@@ -129,7 +129,7 @@ class VietnamFinanceSpider(scrapy.Spider):
         for kw in keyword_list:
             for paragraph in article_content:
                 paragraph_content = str(paragraph.xpath(".//text()").extract_first())
-                if paragraph_content.find(kw) != -1:
+                if paragraph_content.lower().find(" " + kw + " ") != -1:
                     # Keyword found
                     match_flg = True
                     break

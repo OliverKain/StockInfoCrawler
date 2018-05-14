@@ -6,7 +6,7 @@ from scrapy.http import Request
 class BaoCongThuongSpider(scrapy.Spider):
     name = "baocongthuong-spider"
     # Crawling Info
-    max_depth = 5
+    max_page_depth = 5
     target_root = "http://baocongthuong.com.vn"
     headline_xpath = "//div[@class='content-wrap colx500']/section/section[@class='featured']/article"
     headline_time_xpath = "./header/time/@datetime"
@@ -16,7 +16,7 @@ class BaoCongThuongSpider(scrapy.Spider):
     init_xpath = "./header/p/text()"
     link_xpath = "./header/h1/a/@href"
     start_urls = []
-    for s in range(1, max_depth + 1):
+    for s in range(1, max_page_depth + 1):
         start_urls.append("{0}/thuong-mai/xuat-nhap-khau&BRSR={1}".format(target_root, (s-1)*20))
         start_urls.append("{0}/thuong-mai/xuc-tien-thuong-mai&BRSR={1}".format(target_root, (s-1)*20))
         start_urls.append("{0}/thuong-mai/thi-truong-trong-nuoc&BRSR={1}".format(target_root, (s-1)*20))
@@ -71,7 +71,7 @@ class BaoCongThuongSpider(scrapy.Spider):
         for kw in keyword_list:
             for paragraph in article_content:
                 paragraph_content = str(paragraph.xpath(".//text()").extract_first())
-                if paragraph_content.find(kw) != -1:
+                if paragraph_content.lower().find(" " + kw + " ") != -1:
                     # Keyword found
                     match_flg = True
                     break

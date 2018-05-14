@@ -3,7 +3,7 @@ import scrapy
 from scrapy.http import Request
 
 
-class CNBCSpider(scrapy.Spider):
+class CnbcSpider(scrapy.Spider):
     name = "cnbc-spider"
     # Crawling Info
     max_depth = 10
@@ -40,70 +40,93 @@ class CNBCSpider(scrapy.Spider):
                 headline = response.selector.xpath(self.headline_xpath)
                 if headline is not None:
                     headline_link = self.target_root + headline.xpath(self.link_xpath).extract_first().strip()
-                    article_detail = {"title": headline.xpath(self.title_xpath).extract_first().strip(),
-                                      "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
-                                      "init": headline.xpath(self.init_xpath).extract_first().strip(),
-                                      "link": headline_link}
-                    if self.keyword:
-                        yield Request(url=headline_link, callback=self.examine_article,
-                                       meta={"article_detail": article_detail,
-                                             "keyword": self.keyword})
-                    else:
-                        yield article_detail
+                    if headline_link.find("/video/") == -1:
+                        article_detail = {"title": headline.xpath(self.title_xpath).extract_first().strip(),
+                                        "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
+                                        "init": headline.xpath(self.init_xpath).extract_first().strip(),
+                                        "link": headline_link}
+                        if self.keyword:
+                            yield Request(url=headline_link, callback=self.examine_article,
+                                        meta={"article_detail": article_detail,
+                                                "keyword": self.keyword})
+                        else:
+                            yield article_detail
 
             # Get headline article in list
             headline_list = response.selector.xpath(self.headline_list_xpath)
             for headline in headline_list:
                 if headline.xpath("./@id").extract_first() is None:
-                    headline_link = headline.xpath(self.link_xpath).extract_first().strip()
-                    article_detail = {"title": headline.xpath(self.title_xpath).extract_first().strip(),
-                                      "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
-                                      "init": headline.xpath(self.init_xpath).extract_first().strip(),
-                                      "link": headline_link}
-                    if self.keyword:
-                        yield Request(url=headline_link, callback=self.examine_article,
-                                       meta={"article_detail": article_detail,
-                                             "keyword": self.keyword})
-                    else:
-                        yield article_detail
+                    headline_link = self.target_root + headline.xpath(self.link_xpath).extract_first().strip()
+                    if headline_link.find("/video/") == -1:
+                        article_detail = {"title": headline.xpath(self.title_xpath).extract_first().strip(),
+                                        "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
+                                        "init": headline.xpath(self.init_xpath).extract_first().strip(),
+                                        "link": headline_link}
+                        if self.keyword:
+                            yield Request(url=headline_link, callback=self.examine_article,
+                                        meta={"article_detail": article_detail,
+                                                "keyword": self.keyword})
+                        else:
+                            yield article_detail
 
             # Get article in list
             article_list = response.selector.xpath(self.list_xpath)
             for article in article_list:
                 if article.xpath("./@id").extract_first() is None:
-                    article_link = article.xpath(self.link_xpath).extract_first().strip()
-                    article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
-                                      "time": article.xpath(self.time_xpath).extract_first().strip()[1:11],
-                                      "init": article.xpath(self.init_xpath).extract_first().strip(),
-                                      "link": article_link}
-                    if self.keyword:
-                        yield Request(url=article_link, callback=self.examine_article,
-                                       meta={"article_detail": article_detail,
-                                             "keyword": self.keyword})
-                    else:
-                        yield article_detail
+                    article_link = self.target_root + article.xpath(self.link_xpath).extract_first().strip()
+                    if article_link.find("/video/") == -1:
+                        article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
+                                        "time": article.xpath(self.time_xpath).extract_first().strip()[1:11],
+                                        "init": article.xpath(self.init_xpath).extract_first().strip(),
+                                        "link": article_link}
+                        if self.keyword:
+                            yield Request(url=article_link, callback=self.examine_article,
+                                        meta={"article_detail": article_detail,
+                                                "keyword": self.keyword})
+                        else:
+                            yield article_detail
+
         # Make-it sub
         else:
+            # Get headline article
             if str(response.request.url).endswith("?page=1"):
-                makeit_headline_xpath = self.list_xpath + "/li[1]/div/a"
+                makeit_headline_xpath = self.list_xpath + "/div/a"
                 headline = response.selector.xpath(makeit_headline_xpath)
                 if headline is not None:
                     headline_link = self.target_root + headline.xpath("./@href").extract_first().strip()
-                    article_detail = {"title": headline.xpath("./div[@class='headline']/text()").extract_first().strip(),
-                                      "time": headline.xpath("./@href").extract_first().strip()[1:11],
-                                      "init": headline.xpath(self.init_xpath).extract_first().strip(),
-                                      "link": headline_link}
-                    if self.keyword:
-                        yield Request(url=headline_link, callback=self.examine_article,
-                                       meta={"article_detail": article_detail,
-                                             "keyword": self.keyword})
-                    else:
-                        yield article_detail
+                    if headline_link.find("/video/") == -1:
+                        article_detail = {"title": headline.xpath("./div[@class='headline']/text()").extract_first().strip(),
+                                        "time": headline.xpath("./@href").extract_first().strip()[1:11],
+                                        "init": headline.xpath(self.init_xpath).extract_first().strip(),
+                                        "link": headline_link}
+                        if self.keyword:
+                            yield Request(url=headline_link, callback=self.examine_article,
+                                        meta={"article_detail": article_detail,
+                                                "keyword": self.keyword})
+                        else:
+                            yield article_detail
+
+            # Get article in list
+            article_list = response.selector.xpath(self.list_xpath)
+            for article in article_list:
+                if str(article.xpath("./@class").extract_first()).find(" card") != -1:
+                    article_link = self.target_root + article.xpath(self.link_xpath).extract_first().strip()
+                    if article_link.find("/video/") == -1:
+                        article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
+                                        "time": article.xpath(self.time_xpath).extract_first().strip()[1:11],
+                                        "init": article.xpath(self.init_xpath).extract_first().strip(),
+                                        "link": article_link}
+                        if self.keyword:
+                            yield Request(url=article_link, callback=self.examine_article,
+                                        meta={"article_detail": article_detail,
+                                                "keyword": self.keyword})
+                        else:
+                            yield article_detail
 
     @staticmethod
     def examine_article(response):
         keyword_list = response.meta.get("keyword")
-        article_content_xpath = "//article[@class='__MASTERCMS_CONTENT']/div/p"
+        article_content_xpath = "//div[@id='article_body']//div[@class='group']/p"
         article_content = response.selector.xpath(article_content_xpath)
         match_flg = False
         for kw in keyword_list:

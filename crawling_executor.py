@@ -14,14 +14,14 @@ from StockInfoCrawler.spiders.baodientuchinhphu_spider import BaoDienTuChinhPhuS
 from StockInfoCrawler.spiders.basic_indexes_power_spider import BasicIndexesPowerSpider
 from StockInfoCrawler.spiders.basic_indexes_spider import BasicIndexesSpider
 from StockInfoCrawler.spiders.bloomberg_spider import BloombergSpider
-from StockInfoCrawler.spiders.cnbc_spider import CNBCSpider
+from StockInfoCrawler.spiders.cnbc_spider import CnbcSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
 from StockInfoCrawler.spiders.forbesvietnam_spider import ForbesVietNamSpider
 from StockInfoCrawler.spiders.hnx_disclosure_spider import HnxDisclosureSpider
 from StockInfoCrawler.spiders.nguoitieudung_spider import NguoiTieuDungSpider
+from StockInfoCrawler.spiders.reuters_spider import ReutersSpider
 from StockInfoCrawler.spiders.sbv_spider import SbvSpider
-from StockInfoCrawler.spiders.scic_portfolio_spider import ScicPortfolioSpider
-from StockInfoCrawler.spiders.scic_press_spider import ScicPressSpider
+from StockInfoCrawler.spiders.scic_spider import ScicSpider
 from StockInfoCrawler.spiders.taichinhdientu_spider import TaiChinhDienTuSpider
 from StockInfoCrawler.spiders.theleader_spider import TheLeaderSpider
 from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChinhVietNamSpider
@@ -47,7 +47,8 @@ if inputOpt == "s":
 
 # News
 else:
-    availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]
+    availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+                     "11", "12", "13", "14", "15"]
     print("Lựa chọn hiện có: ")
     print("[1]  vneconomy.vn")
     print("[2]  thoibaotaichinhvietnam.vn")
@@ -61,13 +62,14 @@ else:
     print("[10] nguoitieudung.com.vn")
     print("[11] baocongthuong.com.vn")
     print("[12] forbesvietnam.com.vn")
-    print("[13] bloomberg.com/search?query=vietnam")
+    print("[13] bloomberg.com")
     print("[14] cnbc.com")
+    print("[15] reuters.com")
     print("\n")
 
     # Prompt spiders
+    # TODO Debug Mode
     if is_debug:
-        # TODO Debug Mode
         inputOpt = input("Một(s) hay nhiều(m) hay toàn bộ các trang(a)? [s/m/a]:")
         reqOpt = ""
         while inputOpt.lower() != "s" and inputOpt.lower() != "m" and inputOpt.lower() != "a":
@@ -102,12 +104,19 @@ else:
         # All sites
         else:
             reqOpt = availableList
-            reqOpt = ["1", "2", "8", "9", "10", "11", "12"]
-    else:
-        reqOpt = availableList
-        # TODO some available website
-        reqOpt = ["1", "2", "8", "9", "10", "11", "12"]
+            reqOpt = ["1", "2", "3", "8", "9", "10", "11", "12"]
 
+    # Release Mode
+    else:
+        inputOpt = input("Tin tức trong nước (v) hay thế giới(w)? [v/w]:")
+        reqOpt = ""
+        while inputOpt.lower() != "v" and inputOpt.lower() != "w":
+            inputOpt = input("Hãy nhập lại lựa chọn [v/w]:")
+        # VN News
+        if inputOpt == "v":
+            reqOpt = ["1", "2", "3", "8", "9", "10", "11", "12"]
+        else:
+            reqOpt = ["14", "15"]
 
     # Prompt using keyword
     inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
@@ -155,9 +164,8 @@ if "2" in reqOpt:
     thoibaotaichinhvietnam_spider = ThoiBaoTaiChinhVietNamSpider(kw=keyword)
     process.crawl(thoibaotaichinhvietnam_spider, kw=keyword)
 if "3" in reqOpt:
-    # TODO iterate sub-menu, 1 exported file
-    process.crawl(ScicPortfolioSpider)
-    process.crawl(ScicPressSpider)
+    scic_spider = ScicSpider(kw=keyword)
+    process.crawl(scic_spider, kw=keyword)
 if "4" in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     process.crawl(SbvSpider)
@@ -191,8 +199,11 @@ if "13" in reqOpt:
     bloomberg_spider = BloombergSpider(kw=keyword)
     process.crawl(bloomberg_spider, kw=keyword)
 if "14" in reqOpt:
-    cnbc_spider = CNBCSpider(kw=keyword)
+    cnbc_spider = CnbcSpider(kw=keyword)
     process.crawl(cnbc_spider, kw=keyword)
+if "15" in reqOpt:
+    reuters_spider = ReutersSpider(kw=keyword)
+    process.crawl(reuters_spider, kw=keyword)
 
 # Start crawling
 process.start()
@@ -206,13 +217,8 @@ process.start()
 # https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1953252732
 # http://www.thesaigontimes.vn/kinhdoanh/
 
-# https://www.bloomberg.com/search?query=vietnam
-# https://www.dealstreetasia.com/countries/vietnam/
-# https://www.bloomberg.com/markets
-# https://www.bloomberg.com/businessweek
-# https://www.cnbc.com/economy/
-# https://www.cnbc.com/finance/
-# https://www.cnbc.com/investing/
-# https://www.cnbc.com/make-it/money/
-# https://www.reuters.com/finance/markets
-# https://www.nytimes.com/section/business/dealbook?action=click&contentCollection=Business%2FDealBook&contentPlacement=2&module=SectionsNav&pgtype=sectionfront&region=TopBar&version=BrowseTree
+# TODO https://www.dealstreetasia.com/countries/vietnam/
+# TODO https://www.bloomberg.com/markets
+# TODO https://www.bloomberg.com/businessweek
+# TODO https://www.reuters.com/news/archive/marketsNews?view=page&page=50
+# TODO https://www.nytimes.com/section/business/dealbook?action=click&contentCollection=Business%2FDealBook&contentPlacement=2&module=SectionsNav&pgtype=sectionfront&region=TopBar&version=BrowseTree
