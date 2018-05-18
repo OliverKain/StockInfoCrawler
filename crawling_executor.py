@@ -3,6 +3,7 @@
 import re
 import csv
 import numpy
+import logging
 
 from commons.clean_crawled_data import clean_up_data
 
@@ -18,6 +19,7 @@ from StockInfoCrawler.spiders.cnbc_spider import CnbcSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
 from StockInfoCrawler.spiders.forbesvietnam_spider import ForbesVietNamSpider
 from StockInfoCrawler.spiders.hnx_disclosure_spider import HnxDisclosureSpider
+from StockInfoCrawler.spiders.nytimes_spider import NYTimesSpider
 from StockInfoCrawler.spiders.nguoitieudung_spider import NguoiTieuDungSpider
 from StockInfoCrawler.spiders.reuters_spider import ReutersSpider
 from StockInfoCrawler.spiders.sbv_spider import SbvSpider
@@ -30,9 +32,8 @@ from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 
 
 # Global variable
-is_debug = False
+is_debug = True
 keyword = []
-
 # Clean up data folder
 clean_up_data()
 
@@ -47,8 +48,8 @@ if inputOpt == "s":
 
 # News
 else:
-    availableList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                     "11", "12", "13", "14", "15"]
+    news_spider_count = 15
+    availableList = ["{0}".format(x) for x in range(1, news_spider_count + 1)]
     print("Lựa chọn hiện có: ")
     print("[1]  vneconomy.vn")
     print("[2]  thoibaotaichinhvietnam.vn")
@@ -65,6 +66,7 @@ else:
     print("[13] bloomberg.com")
     print("[14] cnbc.com")
     print("[15] reuters.com")
+    print("[16] nytimes.com")
     print("\n")
 
     # Prompt spiders
@@ -158,6 +160,7 @@ if "999" in reqOpt:
     process.crawl(BasicIndexesPowerSpider)
 
 # News
+# TODO Add timestamp filter
 if "1" in reqOpt:
     vneconomy_spider = VnEconomySpider(kw=keyword)
     process.crawl(vneconomy_spider, kw=keyword)
@@ -205,21 +208,32 @@ if "14" in reqOpt:
 if "15" in reqOpt:
     reuters_spider = ReutersSpider(kw=keyword)
     process.crawl(reuters_spider, kw=keyword)
+if "16" in reqOpt:
+    nytimes_spider = NytimesSpider(kw=keyword)
+    process.crawl(nytimes_spider, kw=keyword)
+
+# Set logging level
+logging.getLogger('scrapy').setLevel(logging.DEBUG)
 
 # Start crawling
 process.start()
 
-# http://tapchitaichinh.vn/kinh-te-vi-mo/
-# http://tapchitaichinh.vn/thi-truong-tai-chinh/
-# http://kinhtevn.com.vn
-# http://nhipcaudautu.vn
-# http://www.ssc.gov.vn/ubck/faces/vi/vimenu/vipages_vitintucsukien/phathanh?_afrWindowId=y2lp9w8o6_70&_afrLoop=22847863432695794&_afrWindowMode=0&_adf.ctrl-state=1azrsvakbj_4#%40%3F_afrWindowId%3Dy2lp9w8o6_70%26_afrLoop%3D22847863432695794%26_afrWindowMode%3D0%26_adf.ctrl-state%3Dy2lp9w8o6_90
-# http://enternews.vn
-# https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1953252732
-# http://www.thesaigontimes.vn/kinhdoanh/
+# TODO http://tapchitaichinh.vn/kinh-te-vi-mo/
+# TODO http://tapchitaichinh.vn/thi-truong-tai-chinh/
+# TODO http://kinhtevn.com.vn
+# TODO http://nhipcaudautu.vn
+# TODO http://thoibaonganhang.vn/
+# TODO http://www.ssc.gov.vn/ubck/faces/vi/vimenu/vipages_vitintucsukien/phathanh?_afrWindowId=y2lp9w8o6_70&_afrLoop=22847863432695794&_afrWindowMode=0&_adf.ctrl-state=1azrsvakbj_4#%40%3F_afrWindowId%3Dy2lp9w8o6_70%26_afrLoop%3D22847863432695794%26_afrWindowMode%3D0%26_adf.ctrl-state%3Dy2lp9w8o6_90
+# TODO http://enternews.vn
+# TODO https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1953252732
+# TODO http://www.thesaigontimes.vn/kinhdoanh/
+# TODO https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1500303253
+# TODO http://www.mpi.gov.vn/Pages/chuyenmuctin.aspx?idcm=54
+# TODO http://www.moit.gov.vn/
+# TODO https://hnx.vn/thong-tin-cong-bo-ny-tcph.html
+
 
 # TODO https://www.dealstreetasia.com/countries/vietnam/
 # TODO https://www.bloomberg.com/markets
 # TODO https://www.bloomberg.com/businessweek
-# TODO https://www.reuters.com/news/archive/marketsNews?view=page&page=50
 # TODO https://www.nytimes.com/section/business/dealbook?action=click&contentCollection=Business%2FDealBook&contentPlacement=2&module=SectionsNav&pgtype=sectionfront&region=TopBar&version=BrowseTree
