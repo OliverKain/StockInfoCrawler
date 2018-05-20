@@ -26,16 +26,57 @@ from StockInfoCrawler.spiders.sbv_spider import SbvSpider
 from StockInfoCrawler.spiders.scic_spider import ScicSpider
 from StockInfoCrawler.spiders.taichinhdientu_spider import TaiChinhDienTuSpider
 from StockInfoCrawler.spiders.theleader_spider import TheLeaderSpider
+from StockInfoCrawler.spiders.thoibaonganhang_spider import ThoiBaoNganHangSpider
 from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChinhVietNamSpider
 from StockInfoCrawler.spiders.vietnamfinance_spider import VietnamFinanceSpider
 from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 
 
 # Global variable
-is_debug = False
+is_debug = True
 keyword = []
 # Clean up data folder
 clean_up_data()
+
+news_spider_count = 16
+availableList = ["{0}".format(x) for x in range(1, news_spider_count + 1)]
+
+# Dosmestic website indexes
+idx_count = 1
+baocongthuong_idx = str(idx_count)
+idx_count = idx_count + 1
+baodientuchinhphu_idx = str(idx_count)
+forbesvietnam_idx = str(idx_count)
+idx_count = idx_count + 1
+hnx_idx = str(idx_count)
+idx_count = idx_count + 1
+nguoitieudung_idx = str(idx_count)
+idx_count = idx_count + 1
+sbv_idx = str(idx_count)
+idx_count = idx_count + 1
+scic_idx = str(idx_count)
+idx_count = idx_count + 1
+taichinhdientu_idx = str(idx_count)
+idx_count = idx_count + 1
+theleader_idx = str(idx_count)
+idx_count = idx_count + 1
+thoibaonganhang_idx = str(idx_count)
+idx_count = idx_count + 1
+thoibaotaichinhvietnam_idx = str(idx_count)
+idx_count = idx_count + 1
+vneconomy_idx = str(idx_count)
+idx_count = idx_count + 1
+vietnamfinance_idx = str(idx_count)
+
+# International website indexes
+idx_count = idx_count + 1
+bloomberg_idx = str(idx_count)
+idx_count = idx_count + 1
+cnbc_idx = str(idx_count)
+idx_count = idx_count + 1
+reuters_idx = str(idx_count)
+idx_count = idx_count + 1
+nytimes_idx = str(idx_count)
 
 # Display options
 inputOpt = input("Chỉ số cơ bản(s) hay tin tức(n)? [s/n]:")
@@ -48,29 +89,6 @@ if inputOpt == "s":
 
 # News
 else:
-    news_spider_count = 16
-    availableList = ["{0}".format(x) for x in range(1, news_spider_count + 1)]
-
-    # Dosmestic website indexes
-    baocongthuong_idx = "1"
-    baodientuchinhphu_idx = "2"
-    forbesvietnam_idx = "3"
-    hnx_idx = "4"
-    nguoitieudung_idx = "5"
-    sbv_idx = "6"
-    scic_idx = "7"
-    taichinhdientu_idx = "8"
-    theleader_idx = "9"
-    thoibaotaichinhvietnam_idx = "10"
-    vneconomy_idx = "11"
-    vietnamfinance_idx = "12"
-
-    # International website indexes
-    bloomberg_idx = "13"
-    cnbc_idx = "14"
-    reuters_idx = "15"
-    nytimes_idx = "16"
-
     print("Lựa chọn hiện có: ")
     print("[{0}] baocongthuong.com.vn".format(baocongthuong_idx))
     print("[{0}] baodientu.chinhphu.vn".format(baodientuchinhphu_idx))
@@ -81,6 +99,7 @@ else:
     print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)".format(scic_idx))
     print("[{0}] taichinhdientu.vn".format(taichinhdientu_idx))
     print("[{0}] theleader.vn".format(theleader_idx))
+    print("[{0}] thoibaonganhang.vn".format(thoibaonganhang_idx))
     print("[{0}] thoibaotaichinhvietnam.vn".format(thoibaotaichinhvietnam_idx))
     print("[{0}] vneconomy.vn".format(vneconomy_idx))
     print("[{0}] vietnamfinance.vn".format(vietnamfinance_idx))
@@ -93,10 +112,10 @@ else:
     # Prompt spiders
     # TODO Debug Mode
     if is_debug:
-        inputOpt = input("Một(s) hay nhiều(m) hay toàn bộ các trang(a)? [s/m/a]:")
+        inputOpt = input("Một(s) hay nhiều(m) trang? [s/m]:")
         reqOpt = ""
-        while inputOpt.lower() != "s" and inputOpt.lower() != "m" and inputOpt.lower() != "a":
-            inputOpt = input("Hãy nhập lại lựa chọn [s/m/a]:")
+        while inputOpt.lower() != "s" and inputOpt.lower() != "m":
+            inputOpt = input("Hãy nhập lại lựa chọn [s/m]:")
         # Single site
         if inputOpt == "s":
             inputOpt = input("Hãy nhập lựa chọn của bạn [1-" + str(len(availableList)) + "]:")
@@ -124,10 +143,6 @@ else:
                 else:
                     # Invalid list
                     inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
-        # All sites
-        else:
-            reqOpt = availableList
-            reqOpt = ["1", "2", "3", "8", "9", "10", "11", "12"]
 
     # Release Mode
     else:
@@ -137,7 +152,8 @@ else:
             inputOpt = input("Hãy nhập lại lựa chọn [v/w]:")
         if inputOpt == "v":
             # VN News
-            reqOpt = ["1", "2", "3", "8", "9", "10", "11", "12"]
+            reqOpt = [baocongthuong_idx, forbesvietnam_idx, nguoitieudung_idx, scic_idx, theleader_idx,
+                      thoibaotaichinhvietnam_idx, vietnamfinance_idx, vneconomy_idx]
         else:
             # World News
             reqOpt = [bloomberg_idx, cnbc_idx, nytimes_idx, reuters_idx]
@@ -182,55 +198,72 @@ if "999" in reqOpt:
 
 # News
 # TODO Add timestamp filter
-if vneconomy_idx in reqOpt:
-    vneconomy_spider = VnEconomySpider(kw=keyword)
-    process.crawl(vneconomy_spider, kw=keyword)
-if thoibaotaichinhvietnam_idx in reqOpt:
-    thoibaotaichinhvietnam_spider = ThoiBaoTaiChinhVietNamSpider(kw=keyword)
-    process.crawl(thoibaotaichinhvietnam_spider, kw=keyword)
-if scic_idx in reqOpt:
-    scic_spider = ScicSpider(kw=keyword)
-    process.crawl(scic_spider, kw=keyword)
-if sbv_idx in reqOpt:
-    # TODO iterate sub-menu, 1 exported file
-    process.crawl(SbvSpider)
-if taichinhdientu_idx in reqOpt:
-    # TODO iterate sub-menu, 1 exported file
-    process.crawl(TaiChinhDienTuSpider)
-if baodientuchinhphu_idx in reqOpt:
-    # TODO iterate sub-menu, 1 exported file
-    process.crawl(BaoDienTuChinhPhuSpider)
-if hnx_idx in reqOpt:
-    # TODO iterate sub-menu + paging, 1 exported file
-    process.crawl(HnxDisclosureSpider)
-if theleader_idx in reqOpt:
-    theleader_spider = TheLeaderSpider(kw=keyword)
-    process.crawl(theleader_spider, kw=keyword)
-if vietnamfinance_idx in reqOpt:
-    vietnamfinance_spider = VietnamFinanceSpider(kw=keyword)
-    process.crawl(vietnamfinance_spider, kw=keyword)
-if nguoitieudung_idx in reqOpt:
-    # TODO Entire page?
-    nguoitieudung_spider = NguoiTieuDungSpider(kw=keyword)
-    process.crawl(nguoitieudung_spider, kw=keyword)
 if baocongthuong_idx in reqOpt:
     # TODO Entire page?
     baocongthuong_spider = BaoCongThuongSpider(kw=keyword)
+    # noinspection PyTypeChecker
     process.crawl(baocongthuong_spider, kw=keyword)
+if baodientuchinhphu_idx in reqOpt:
+    # TODO iterate sub-menu, 1 exported file
+    process.crawl(BaoDienTuChinhPhuSpider)
 if forbesvietnam_idx in reqOpt:
     forbesvietnam_spider = ForbesVietNamSpider(kw=keyword)
+    # noinspection PyTypeChecker
     process.crawl(forbesvietnam_spider, kw=keyword)
+if hnx_idx in reqOpt:
+    # TODO iterate sub-menu + paging, 1 exported file
+    process.crawl(HnxDisclosureSpider)
+if nguoitieudung_idx in reqOpt:
+    # TODO Entire page?
+    nguoitieudung_spider = NguoiTieuDungSpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(nguoitieudung_spider, kw=keyword)
+if sbv_idx in reqOpt:
+    # TODO iterate sub-menu, 1 exported file
+    process.crawl(SbvSpider)
+if scic_idx in reqOpt:
+    scic_spider = ScicSpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(scic_spider, kw=keyword)
+if taichinhdientu_idx in reqOpt:
+    # TODO iterate sub-menu, 1 exported file, display url
+    process.crawl(TaiChinhDienTuSpider)
+if theleader_idx in reqOpt:
+    theleader_spider = TheLeaderSpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(theleader_spider, kw=keyword)
+if thoibaonganhang_idx in reqOpt:
+    thoibaonganhang_spider = ThoiBaoNganHangSpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(thoibaonganhang_spider, kw=keyword)
+if thoibaotaichinhvietnam_idx in reqOpt:
+    thoibaotaichinhvietnam_spider = ThoiBaoTaiChinhVietNamSpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(thoibaotaichinhvietnam_spider, kw=keyword)
+if vneconomy_idx in reqOpt:
+    vneconomy_spider = VnEconomySpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(vneconomy_spider, kw=keyword)
+if vietnamfinance_idx in reqOpt:
+    vietnamfinance_spider = VietnamFinanceSpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(vietnamfinance_spider, kw=keyword)
+
 if bloomberg_idx in reqOpt:
     bloomberg_spider = BloombergSpider(kw=keyword)
+    # noinspection PyTypeChecker
     process.crawl(bloomberg_spider, kw=keyword)
 if cnbc_idx in reqOpt:
     cnbc_spider = CnbcSpider(kw=keyword)
+    # noinspection PyTypeChecker
     process.crawl(cnbc_spider, kw=keyword)
 if reuters_idx in reqOpt:
     reuters_spider = ReutersSpider(kw=keyword)
+    # noinspection PyTypeChecker
     process.crawl(reuters_spider, kw=keyword)
 if nytimes_idx in reqOpt:
     nytimes_spider = NYTimesSpider(kw=keyword)
+    # noinspection PyTypeChecker
     process.crawl(nytimes_spider, kw=keyword)
 
 # Set logging level
@@ -244,7 +277,9 @@ process.start()
 # TODO http://kinhtevn.com.vn
 # TODO http://nhipcaudautu.vn
 # TODO http://thoibaonganhang.vn/
-# TODO http://www.ssc.gov.vn/ubck/faces/vi/vimenu/vipages_vitintucsukien/phathanh?_afrWindowId=y2lp9w8o6_70&_afrLoop=22847863432695794&_afrWindowMode=0&_adf.ctrl-state=1azrsvakbj_4#%40%3F_afrWindowId%3Dy2lp9w8o6_70%26_afrLoop%3D22847863432695794%26_afrWindowMode%3D0%26_adf.ctrl-state%3Dy2lp9w8o6_90
+# TODO http://www.ssc.gov.vn/ubck/faces/vi/vimenu/vipages_vitintucsukien/phathanh
+# ?_afrWindowId=y2lp9w8o6_70&_afrLoop=22847863432695794&_afrWindowMode=0&_adf.ctrl-state=1azrsvakbj_4
+# #%40%3F_afrWindowId%3Dy2lp9w8o6_70%26_afrLoop%3D22847863432695794%26_afrWindowMode%3D0%26_adf.ctrl-state%3Dy2lp9w8o6_90
 # TODO http://enternews.vn
 # TODO https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1953252732
 # TODO http://www.thesaigontimes.vn/kinhdoanh/

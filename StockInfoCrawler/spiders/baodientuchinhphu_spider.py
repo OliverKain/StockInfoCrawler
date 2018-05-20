@@ -24,7 +24,7 @@ class BaoDienTuChinhPhuSpider(scrapy.Spider):
         # Get headline article
         story_feature = response.selector.xpath(self.story_feature_xpath)
         article_detail = {"title": story_feature.xpath(self.title_xpath).extract_first().strip(),
-                          "time": story_feature.xpath(self.time_xpath).extract_first().strip(),
+                          "time": get_time(story_feature.xpath(self.time_xpath).extract_first().strip()),
                           "summary": story_feature.xpath(self.summary_xpath).extract_first().strip()}
         if is_within_two_weeks(article_detail.get("time")):
             yield article_detail
@@ -32,7 +32,12 @@ class BaoDienTuChinhPhuSpider(scrapy.Spider):
         article_list = response.selector.xpath(self.list_xpath)
         for article in article_list:
             article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
-                              "time": article.xpath(self.time_xpath).extract_first().strip(),
+                              "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
                               "summary": article.xpath(self.summary_xpath).extract_first().strip()}
             if is_within_two_weeks(article_detail.get("time")):
                 yield article_detail
+
+
+def get_time(time_str):
+    return time_str[13:17] + "/" + time_str[10:12] + "/" + time_str[7:9]
+

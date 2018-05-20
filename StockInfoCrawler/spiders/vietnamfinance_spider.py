@@ -84,7 +84,7 @@ class VietnamFinanceSpider(scrapy.Spider):
             article_detail = {"title": top_focus.xpath(self.top_focus_title_xpath).extract_first().strip(),
                               "time": get_time_from_link(top_link),
                               "intro": "",
-                              "link": self.target_root + top_link}
+                              "link": top_link}
             if is_within_two_weeks(article_detail.get("time")):
                 if self.keyword:
                     yield Request(url=top_link, callback=self.examine_article,
@@ -98,8 +98,7 @@ class VietnamFinanceSpider(scrapy.Spider):
                 article_detail = {"title": item.xpath(self.top_list_item_title_xpath).extract_first().strip(),
                                   "time": get_time_from_link(item_link),
                                   "intro": "",
-                                  "link": self.target_root + item_link
-                                  }
+                                  "link": item_link}
                 if is_within_two_weeks(article_detail.get("time")):
                     if self.keyword:
                         yield Request(url=item_link, callback=self.examine_article,
@@ -114,7 +113,7 @@ class VietnamFinanceSpider(scrapy.Spider):
             article_detail = {"title": article.xpath(self.article_title_xpath).extract_first().strip(),
                               "time": get_time_from_link(article_link),
                               "intro": "",
-                              "link": self.target_root + article_link
+                              "link": article_link
                               }
             if is_within_two_weeks(article_detail.get("time")):
                 if self.keyword:
