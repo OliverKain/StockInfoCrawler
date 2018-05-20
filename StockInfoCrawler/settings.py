@@ -16,13 +16,13 @@ NEWSPIDER_MODULE = 'StockInfoCrawler.spiders'
 FEED_EXPORTERS = {
     'csv': 'StockInfoCrawler.exporters.FixLineCsvItemExporter',
 }
-FEED_EXPORT_ENCODING='utf-8'
+FEED_EXPORT_ENCODING = 'utf-8'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'StockInfoCrawler (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 16

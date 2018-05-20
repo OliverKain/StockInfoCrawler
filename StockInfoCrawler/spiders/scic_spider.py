@@ -15,8 +15,8 @@ class ScicSpider(scrapy.Spider):
     link_xpath = "./td[1]/a/@href"
     start_urls = []
     for s in range(1, max_page_depth + 1):
-        start_urls.append("{0}/index.php/investment.html?start={1}".format(target_root, (s-1)*20))
-        start_urls.append("{0}/index.php/thong-tin-bao-chi.html?start={1}".format(target_root, (s-1)*15))
+        start_urls.append("{0}/index.php/investment.html?start={1}".format(target_root, (s - 1) * 20))
+        start_urls.append("{0}/index.php/thong-tin-bao-chi.html?start={1}".format(target_root, (s - 1) * 15))
     custom_settings = {
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/scic.csv",
@@ -29,6 +29,7 @@ class ScicSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
+        # Get article in list
         article_list = response.selector.xpath(self.list_xpath)
         if article_list is not None:
             for article in article_list:
@@ -43,8 +44,7 @@ class ScicSpider(scrapy.Spider):
                                   "link": article_link}
                 if self.keyword:
                     yield Request(url=article_link, callback=self.examine_article,
-                                meta={"article_detail": article_detail,
-                                        "keyword": self.keyword})
+                                  meta={"article_detail": article_detail, "keyword": self.keyword})
                 else:
                     yield article_detail
 

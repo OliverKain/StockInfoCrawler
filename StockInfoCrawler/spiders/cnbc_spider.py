@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
+from commons.is_within_two_weeks import is_within_two_weeks
 
 
 class CnbcSpider(scrapy.Spider):
@@ -42,15 +43,16 @@ class CnbcSpider(scrapy.Spider):
                     headline_link = self.target_root + headline.xpath(self.link_xpath).extract_first().strip()
                     if headline_link.find("/video/") == -1:
                         article_detail = {"title": headline.xpath(self.title_xpath).extract_first().strip(),
-                                        "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
-                                        "init": headline.xpath(self.init_xpath).extract_first().strip(),
-                                        "link": headline_link}
-                        if self.keyword:
-                            yield Request(url=headline_link, callback=self.examine_article,
-                                        meta={"article_detail": article_detail,
-                                                "keyword": self.keyword})
-                        else:
-                            yield article_detail
+                                          "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
+                                          "init": headline.xpath(self.init_xpath).extract_first().strip(),
+                                          "link": headline_link}
+                        if is_within_two_weeks(article_detail.get("time")):
+                            if self.keyword:
+                                yield Request(url=headline_link, callback=self.examine_article,
+                                              meta={"article_detail": article_detail,
+                                                    "keyword": self.keyword})
+                            else:
+                                yield article_detail
 
             # Get headline article in list
             headline_list = response.selector.xpath(self.headline_list_xpath)
@@ -59,15 +61,16 @@ class CnbcSpider(scrapy.Spider):
                     headline_link = self.target_root + headline.xpath(self.link_xpath).extract_first().strip()
                     if headline_link.find("/video/") == -1:
                         article_detail = {"title": headline.xpath(self.title_xpath).extract_first().strip(),
-                                        "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
-                                        "init": headline.xpath(self.init_xpath).extract_first().strip(),
-                                        "link": headline_link}
-                        if self.keyword:
-                            yield Request(url=headline_link, callback=self.examine_article,
-                                        meta={"article_detail": article_detail,
-                                                "keyword": self.keyword})
-                        else:
-                            yield article_detail
+                                          "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
+                                          "init": headline.xpath(self.init_xpath).extract_first().strip(),
+                                          "link": headline_link}
+                        if is_within_two_weeks(article_detail.get("time")):
+                            if self.keyword:
+                                yield Request(url=headline_link, callback=self.examine_article,
+                                              meta={"article_detail": article_detail,
+                                                    "keyword": self.keyword})
+                            else:
+                                yield article_detail
 
             # Get article in list
             article_list = response.selector.xpath(self.list_xpath)
@@ -76,15 +79,16 @@ class CnbcSpider(scrapy.Spider):
                     article_link = self.target_root + article.xpath(self.link_xpath).extract_first().strip()
                     if article_link.find("/video/") == -1:
                         article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
-                                        "time": article.xpath(self.time_xpath).extract_first().strip()[1:11],
-                                        "init": article.xpath(self.init_xpath).extract_first().strip(),
-                                        "link": article_link}
-                        if self.keyword:
-                            yield Request(url=article_link, callback=self.examine_article,
-                                        meta={"article_detail": article_detail,
-                                                "keyword": self.keyword})
-                        else:
-                            yield article_detail
+                                          "time": article.xpath(self.time_xpath).extract_first().strip()[1:11],
+                                          "init": article.xpath(self.init_xpath).extract_first().strip(),
+                                          "link": article_link}
+                        if is_within_two_weeks(article_detail.get("time")):
+                            if self.keyword:
+                                yield Request(url=article_link, callback=self.examine_article,
+                                              meta={"article_detail": article_detail,
+                                                    "keyword": self.keyword})
+                            else:
+                                yield article_detail
 
         # Make-it sub
         else:
@@ -95,16 +99,18 @@ class CnbcSpider(scrapy.Spider):
                 if headline is not None:
                     headline_link = self.target_root + headline.xpath("./@href").extract_first().strip()
                     if headline_link.find("/video/") == -1:
-                        article_detail = {"title": headline.xpath("./div[@class='headline']/text()").extract_first().strip(),
-                                        "time": headline.xpath("./@href").extract_first().strip()[1:11],
-                                        "init": headline.xpath(self.init_xpath).extract_first().strip(),
-                                        "link": headline_link}
-                        if self.keyword:
-                            yield Request(url=headline_link, callback=self.examine_article,
-                                        meta={"article_detail": article_detail,
-                                                "keyword": self.keyword})
-                        else:
-                            yield article_detail
+                        article_detail = {
+                            "title": headline.xpath("./div[@class='headline']/text()").extract_first().strip(),
+                            "time": headline.xpath("./@href").extract_first().strip()[1:11],
+                            "init": headline.xpath(self.init_xpath).extract_first().strip(),
+                            "link": headline_link}
+                        if is_within_two_weeks(article_detail.get("time")):
+                            if self.keyword:
+                                yield Request(url=headline_link, callback=self.examine_article,
+                                              meta={"article_detail": article_detail,
+                                                    "keyword": self.keyword})
+                            else:
+                                yield article_detail
 
             # Get article in list
             article_list = response.selector.xpath(self.list_xpath)
@@ -113,15 +119,16 @@ class CnbcSpider(scrapy.Spider):
                     article_link = self.target_root + article.xpath(self.link_xpath).extract_first().strip()
                     if article_link.find("/video/") == -1:
                         article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
-                                        "time": article.xpath(self.time_xpath).extract_first().strip()[1:11],
-                                        "init": article.xpath(self.init_xpath).extract_first().strip(),
-                                        "link": article_link}
-                        if self.keyword:
-                            yield Request(url=article_link, callback=self.examine_article,
-                                        meta={"article_detail": article_detail,
-                                                "keyword": self.keyword})
-                        else:
-                            yield article_detail
+                                          "time": article.xpath(self.time_xpath).extract_first().strip()[1:11],
+                                          "init": article.xpath(self.init_xpath).extract_first().strip(),
+                                          "link": article_link}
+                        if is_within_two_weeks(article_detail.get("time")):
+                            if self.keyword:
+                                yield Request(url=article_link, callback=self.examine_article,
+                                              meta={"article_detail": article_detail,
+                                                    "keyword": self.keyword})
+                            else:
+                                yield article_detail
 
     @staticmethod
     def examine_article(response):

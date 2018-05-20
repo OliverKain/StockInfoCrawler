@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
+from commons.is_within_two_weeks import is_within_two_weeks
 
 
 class TheLeaderSpider(scrapy.Spider):
@@ -95,12 +96,13 @@ class TheLeaderSpider(scrapy.Spider):
                                       "intro": "",
                                       "link": self.target_root + item_link
                                       }
-                    if self.keyword:
-                        yield Request(url=(self.target_root + item_link), callback=self.examine_article,
-                                       meta={"article_detail": article_detail,
-                                             "keyword": self.keyword})
-                    else:
-                        yield article_detail
+                    if is_within_two_weeks(article_detail.get("time")):
+                        if self.keyword:
+                            yield Request(url=(self.target_root + item_link), callback=self.examine_article,
+                                           meta={"article_detail": article_detail,
+                                                 "keyword": self.keyword})
+                        else:
+                            yield article_detail
         # Get articles
         article_list = response.selector.xpath(self.list_xpath)
         for article in article_list:
@@ -110,12 +112,13 @@ class TheLeaderSpider(scrapy.Spider):
                               "intro": article.xpath(self.article_intro_xpath).extract_first().strip(),
                               "link": self.target_root + article_link
                               }
-            if self.keyword:
-                yield Request(url=(self.target_root + article_link), callback=self.examine_article,
-                               meta={"article_detail": article_detail,
-                                     "keyword": self.keyword})
-            else:
-                yield article_detail
+            if is_within_two_weeks(article_detail.get("time")):
+                if self.keyword:
+                    yield Request(url=(self.target_root + article_link), callback=self.examine_article,
+                                   meta={"article_detail": article_detail,
+                                         "keyword": self.keyword})
+                else:
+                    yield article_detail
 
     @staticmethod
     def examine_article(response):

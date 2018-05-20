@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
+from commons.is_within_two_weeks import is_within_two_weeks
 
 
 class BaoCongThuongSpider(scrapy.Spider):
@@ -42,12 +43,14 @@ class BaoCongThuongSpider(scrapy.Spider):
                               "time": get_time(headline.xpath(self.headline_time_xpath).extract_first().strip()),
                               "init": headline.xpath(self.init_xpath).extract_first().strip(),
                               "link": headline_link}
-            if self.keyword:
-                yield Request(url=headline_link, callback=self.examine_article,
-                               meta={"article_detail": article_detail,
-                                     "keyword": self.keyword})
-            else:
-                yield article_detail
+            if is_within_two_weeks(article_detail.get("time")):
+                if self.keyword:
+                    yield Request(url=headline_link, callback=self.examine_article,
+                                   meta={"article_detail": article_detail,
+                                         "keyword": self.keyword})
+                else:
+                    yield article_detail
+        # Get article in list
         article_list = response.selector.xpath(self.list_xpath)
         for article in article_list:
             article_link = article.xpath(self.link_xpath).extract_first().strip()
@@ -55,12 +58,13 @@ class BaoCongThuongSpider(scrapy.Spider):
                               "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
                               "init": article.xpath(self.init_xpath).extract_first().strip(),
                               "link": article_link}
-            if self.keyword:
-                yield Request(url=article_link, callback=self.examine_article,
-                               meta={"article_detail": article_detail,
-                                     "keyword": self.keyword})
-            else:
-                yield article_detail
+            if is_within_two_weeks(article_detail.get("time")):
+                if self.keyword:
+                    yield Request(url=article_link, callback=self.examine_article,
+                                   meta={"article_detail": article_detail,
+                                         "keyword": self.keyword})
+                else:
+                    yield article_detail
 
     @staticmethod
     def examine_article(response):

@@ -18,9 +18,8 @@ class SbvSpider(scrapy.Spider):
     }
 
     def parse(self, response):
+        # Get article in list
         article_list = response.selector.xpath(self.list_xpath)
-        # Test response, remove later
-        # yield {"test": article_list.extract_first()}
         for article in article_list:
             div_article_anchor = "region:i2"
             div_id = str(article.xpath(self.div_article_id_xpath).extract_first()).strip()

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import time
 from datetime import datetime
 import scrapy
 from scrapy.http import Request
+from commons.is_within_two_weeks import is_within_two_weeks
 
 
 class ReutersSpider(scrapy.Spider):
@@ -35,15 +35,16 @@ class ReutersSpider(scrapy.Spider):
         for article in article_list:
             article_link = self.target_root + article.xpath(self.link_xpath).extract_first().strip()
             article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
-                            "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
-                            "init": article.xpath(self.init_xpath).extract_first().strip().replace('\n', ' '),
-                            "link": article_link}
-            if self.keyword:
-                yield Request(url=article_link, callback=self.examine_article,
-                            meta={"article_detail": article_detail,
-                                    "keyword": self.keyword})
-            else:
-                yield article_detail
+                              "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
+                              "init": article.xpath(self.init_xpath).extract_first().strip().replace('\n', ' '),
+                              "link": article_link}
+            if is_within_two_weeks(article_detail.get("time")):
+                if self.keyword:
+                    yield Request(url=article_link, callback=self.examine_article,
+                                  meta={"article_detail": article_detail,
+                                        "keyword": self.keyword})
+                else:
+                    yield article_detail
 
     @staticmethod
     def examine_article(response):
@@ -72,6 +73,6 @@ class ReutersSpider(scrapy.Spider):
 
 
 def get_time(time_str):
-    if (time_str.find("EDT") != -1):
+    if time_str.find("EDT") != -1:
         return datetime.now().strftime("%Y/%m/%d")
     return datetime.strptime(time_str, '%b %d %Y').strftime("%Y/%m/%d")

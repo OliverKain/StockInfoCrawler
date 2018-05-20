@@ -32,7 +32,7 @@ from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 
 
 # Global variable
-is_debug = True
+is_debug = False
 keyword = []
 # Clean up data folder
 clean_up_data()
@@ -48,25 +48,46 @@ if inputOpt == "s":
 
 # News
 else:
-    news_spider_count = 15
+    news_spider_count = 16
     availableList = ["{0}".format(x) for x in range(1, news_spider_count + 1)]
+
+    # Dosmestic website indexes
+    baocongthuong_idx = "1"
+    baodientuchinhphu_idx = "2"
+    forbesvietnam_idx = "3"
+    hnx_idx = "4"
+    nguoitieudung_idx = "5"
+    sbv_idx = "6"
+    scic_idx = "7"
+    taichinhdientu_idx = "8"
+    theleader_idx = "9"
+    thoibaotaichinhvietnam_idx = "10"
+    vneconomy_idx = "11"
+    vietnamfinance_idx = "12"
+
+    # International website indexes
+    bloomberg_idx = "13"
+    cnbc_idx = "14"
+    reuters_idx = "15"
+    nytimes_idx = "16"
+
     print("Lựa chọn hiện có: ")
-    print("[1]  vneconomy.vn")
-    print("[2]  thoibaotaichinhvietnam.vn")
-    print("[3]  scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)")
-    print("[4]  sbv.gov.vn (Ngân Hàng Nhà Nước)")
-    print("[5]  taichinhdientu.vn")
-    print("[6]  baodientu.chinhphu.vn")
-    print("[7]  hnx.vn (Thông tin công bố HNX)")
-    print("[8]  theleader.vn")
-    print("[9]  vietnamfinance.vn")
-    print("[10] nguoitieudung.com.vn")
-    print("[11] baocongthuong.com.vn")
-    print("[12] forbesvietnam.com.vn")
-    print("[13] bloomberg.com")
-    print("[14] cnbc.com")
-    print("[15] reuters.com")
-    print("[16] nytimes.com")
+    print("[{0}] baocongthuong.com.vn".format(baocongthuong_idx))
+    print("[{0}] baodientu.chinhphu.vn".format(baodientuchinhphu_idx))
+    print("[{0}] forbesvietnam.com.vn".format(forbesvietnam_idx))
+    print("[{0}] hnx.vn (Thông tin công bố HNX)".format(hnx_idx))
+    print("[{0}] nguoitieudung.com.vn".format(nguoitieudung_idx))
+    print("[{0}] sbv.gov.vn (Ngân Hàng Nhà Nước)".format(sbv_idx))
+    print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)".format(scic_idx))
+    print("[{0}] taichinhdientu.vn".format(taichinhdientu_idx))
+    print("[{0}] theleader.vn".format(theleader_idx))
+    print("[{0}] thoibaotaichinhvietnam.vn".format(thoibaotaichinhvietnam_idx))
+    print("[{0}] vneconomy.vn".format(vneconomy_idx))
+    print("[{0}] vietnamfinance.vn".format(vietnamfinance_idx))
+    print("[{0}] bloomberg.com".format(bloomberg_idx))
+    print("[{0}] cnbc.com".format(cnbc_idx))
+    print("[{0}] reuters.com".format(reuters_idx))
+    print("[{0}] nytimes.com".format(nytimes_idx))
     print("\n")
 
     # Prompt spiders
@@ -119,7 +140,7 @@ else:
             reqOpt = ["1", "2", "3", "8", "9", "10", "11", "12"]
         else:
             # World News
-            reqOpt = ["14", "15"]
+            reqOpt = [bloomberg_idx, cnbc_idx, nytimes_idx, reuters_idx]
 
     # Prompt using keyword
     inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
@@ -161,55 +182,55 @@ if "999" in reqOpt:
 
 # News
 # TODO Add timestamp filter
-if "1" in reqOpt:
+if vneconomy_idx in reqOpt:
     vneconomy_spider = VnEconomySpider(kw=keyword)
     process.crawl(vneconomy_spider, kw=keyword)
-if "2" in reqOpt:
+if thoibaotaichinhvietnam_idx in reqOpt:
     thoibaotaichinhvietnam_spider = ThoiBaoTaiChinhVietNamSpider(kw=keyword)
     process.crawl(thoibaotaichinhvietnam_spider, kw=keyword)
-if "3" in reqOpt:
+if scic_idx in reqOpt:
     scic_spider = ScicSpider(kw=keyword)
     process.crawl(scic_spider, kw=keyword)
-if "4" in reqOpt:
+if sbv_idx in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     process.crawl(SbvSpider)
-if "5" in reqOpt:
+if taichinhdientu_idx in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     process.crawl(TaiChinhDienTuSpider)
-if "6" in reqOpt:
+if baodientuchinhphu_idx in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     process.crawl(BaoDienTuChinhPhuSpider)
-if "7" in reqOpt:
+if hnx_idx in reqOpt:
     # TODO iterate sub-menu + paging, 1 exported file
     process.crawl(HnxDisclosureSpider)
-if "8" in reqOpt:
+if theleader_idx in reqOpt:
     theleader_spider = TheLeaderSpider(kw=keyword)
     process.crawl(theleader_spider, kw=keyword)
-if "9" in reqOpt:
+if vietnamfinance_idx in reqOpt:
     vietnamfinance_spider = VietnamFinanceSpider(kw=keyword)
     process.crawl(vietnamfinance_spider, kw=keyword)
-if "10" in reqOpt:
+if nguoitieudung_idx in reqOpt:
     # TODO Entire page?
     nguoitieudung_spider = NguoiTieuDungSpider(kw=keyword)
     process.crawl(nguoitieudung_spider, kw=keyword)
-if "11" in reqOpt:
+if baocongthuong_idx in reqOpt:
     # TODO Entire page?
     baocongthuong_spider = BaoCongThuongSpider(kw=keyword)
     process.crawl(baocongthuong_spider, kw=keyword)
-if "12" in reqOpt:
+if forbesvietnam_idx in reqOpt:
     forbesvietnam_spider = ForbesVietNamSpider(kw=keyword)
     process.crawl(forbesvietnam_spider, kw=keyword)
-if "13" in reqOpt:
+if bloomberg_idx in reqOpt:
     bloomberg_spider = BloombergSpider(kw=keyword)
     process.crawl(bloomberg_spider, kw=keyword)
-if "14" in reqOpt:
+if cnbc_idx in reqOpt:
     cnbc_spider = CnbcSpider(kw=keyword)
     process.crawl(cnbc_spider, kw=keyword)
-if "15" in reqOpt:
+if reuters_idx in reqOpt:
     reuters_spider = ReutersSpider(kw=keyword)
     process.crawl(reuters_spider, kw=keyword)
-if "16" in reqOpt:
-    nytimes_spider = NytimesSpider(kw=keyword)
+if nytimes_idx in reqOpt:
+    nytimes_spider = NYTimesSpider(kw=keyword)
     process.crawl(nytimes_spider, kw=keyword)
 
 # Set logging level
@@ -234,6 +255,3 @@ process.start()
 
 
 # TODO https://www.dealstreetasia.com/countries/vietnam/
-# TODO https://www.bloomberg.com/markets
-# TODO https://www.bloomberg.com/businessweek
-# TODO https://www.nytimes.com/section/business/dealbook?action=click&contentCollection=Business%2FDealBook&contentPlacement=2&module=SectionsNav&pgtype=sectionfront&region=TopBar&version=BrowseTree

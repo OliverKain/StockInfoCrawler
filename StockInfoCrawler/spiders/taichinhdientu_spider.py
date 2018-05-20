@@ -23,14 +23,14 @@ class TaiChinhDienTuSpider(scrapy.Spider):
     }
 
     def parse(self, response):
+        # Get headline article
         story_feature = response.selector.xpath(self.story_feature_xpath)
         article_detail = {"title": story_feature.xpath(self.story_feature_title_xpath).extract_first().strip(),
                           "time": "",
                           "summary": story_feature.xpath(self.story_feature_summary_xpath).extract_first().strip()}
         yield article_detail
+        # Get article in list
         article_list = response.selector.xpath(self.list_xpath)
-        # Test response, remove later
-        # yield {"test": article_list.extract_first()}
         for article in article_list:
             article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
                               "time": article.xpath(self.time_xpath).extract_first().strip(),

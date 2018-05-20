@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
+from commons.is_within_two_weeks import is_within_two_weeks
 
 
 class NguoiTieuDungSpider(scrapy.Spider):
@@ -30,6 +31,7 @@ class NguoiTieuDungSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
+        # Get article in list
         article_list = response.selector.xpath(self.list_xpath)
         for article in article_list:
             article_link = article.xpath(self.link_xpath).extract_first().strip()
@@ -37,12 +39,13 @@ class NguoiTieuDungSpider(scrapy.Spider):
                               "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
                               "init": article.xpath(self.init_xpath).extract_first().strip(),
                               "link": article_link}
-            if self.keyword:
-                yield Request(url=article_link, callback=self.examine_article,
-                               meta={"article_detail": article_detail,
-                                     "keyword": self.keyword})
-            else:
-                yield article_detail
+            if is_within_two_weeks(article_detail.get("time")):
+                if self.keyword:
+                    yield Request(url=article_link, callback=self.examine_article,
+                                   meta={"article_detail": article_detail,
+                                         "keyword": self.keyword})
+                else:
+                    yield article_detail
 
     @staticmethod
     def examine_article(response):

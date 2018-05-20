@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
+from commons.is_within_two_weeks import is_within_two_weeks
 
 
 class VietnamFinanceSpider(scrapy.Spider):
@@ -84,12 +85,13 @@ class VietnamFinanceSpider(scrapy.Spider):
                               "time": get_time_from_link(top_link),
                               "intro": "",
                               "link": self.target_root + top_link}
-            if self.keyword:
-                yield Request(url=top_link, callback=self.examine_article,
-                               meta={"article_detail": article_detail,
-                                     "keyword": self.keyword})
-            else:
-                yield article_detail
+            if is_within_two_weeks(article_detail.get("time")):
+                if self.keyword:
+                    yield Request(url=top_link, callback=self.examine_article,
+                                   meta={"article_detail": article_detail,
+                                         "keyword": self.keyword})
+                else:
+                    yield article_detail
             top_list = response.selector.xpath(self.top_list_xpath)
             for item in top_list:
                 item_link = item.xpath(self.top_list_item_link_xpath).extract_first().strip()
@@ -98,12 +100,13 @@ class VietnamFinanceSpider(scrapy.Spider):
                                   "intro": "",
                                   "link": self.target_root + item_link
                                   }
-                if self.keyword:
-                    yield Request(url=item_link, callback=self.examine_article,
-                                   meta={"article_detail": article_detail,
-                                         "keyword": self.keyword})
-                else:
-                    yield article_detail
+                if is_within_two_weeks(article_detail.get("time")):
+                    if self.keyword:
+                        yield Request(url=item_link, callback=self.examine_article,
+                                       meta={"article_detail": article_detail,
+                                             "keyword": self.keyword})
+                    else:
+                        yield article_detail
         # Get articles
         article_list = response.selector.xpath(self.list_xpath)
         for article in article_list:
@@ -113,12 +116,13 @@ class VietnamFinanceSpider(scrapy.Spider):
                               "intro": "",
                               "link": self.target_root + article_link
                               }
-            if self.keyword:
-                yield Request(url=article_link, callback=self.examine_article,
-                               meta={"article_detail": article_detail,
-                                     "keyword": self.keyword})
-            else:
-                yield article_detail
+            if is_within_two_weeks(article_detail.get("time")):
+                if self.keyword:
+                    yield Request(url=article_link, callback=self.examine_article,
+                                   meta={"article_detail": article_detail,
+                                         "keyword": self.keyword})
+                else:
+                    yield article_detail
 
     @staticmethod
     def examine_article(response):
