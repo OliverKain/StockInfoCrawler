@@ -3,6 +3,8 @@ import scrapy
 import json
 import requests
 from scrapy.http import Request
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 from datetime import date, timedelta
 
 
@@ -11,7 +13,7 @@ class HsxSpider(scrapy.Spider):
     name = "hsx-spider"
 
     # Crawling Info
-    target_root = "https://hnx.vn/"
+    target_root = "https://www.hsx.vn/Modules/Cms/Web/LoadArticle?id="
     today = date.today().strftime("%d.%m.%Y")
     last_two_weeks_str = (date.today() - timedelta(days=14)).strftime("%d.%m.%Y")
     start_urls = []
@@ -19,7 +21,6 @@ class HsxSpider(scrapy.Spider):
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/hsx.csv",
     }
-    list_json_id = "rows"
 
     def __init__(self, kw, **kwargs):
         init_url = "https://www.hsx.vn/Modules/CMS/Web/ArticleInCategory/dca0933e-a578-4eaf-8b29-beb4575052c5"\
@@ -34,7 +35,7 @@ class HsxSpider(scrapy.Spider):
         response = requests.get(url=list_json_link)
         response_json = json.loads(response.text)
         total_page = response_json.get("total")
-        for i in range(total_page + 1):
+        for i in range(1, total_page + 1):
             self.start_urls.append(init_url.format(self.last_two_weeks_str, self.today, i))
         self.keyword = kw
         if self.keyword:
@@ -42,11 +43,15 @@ class HsxSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
-        article_list = response.selector.xpath(self.list_xpath)
-        # Test response, remove later
-        # yield {"test": article_list.extract_first()}
+        response_json = json.loads(response.text)
+        article_list = response_json.get("rows")
         for article in article_list:
-            article_detail = {"stock_id": article.xpath(self.stock_id_xpath).extract_first().strip(),
-                              "title": article.xpath(self.title_xpath).extract_first().strip(),
-                              "time": article.xpath(self.time_xpath).extract_first().strip()}
+            article_detail = {"title": article.get("cell")[2][29:-7],
+                              "time": get_time(article.get("cell")[1]),
+                              "link": self.target_root + article.get("cell")[0]}
             yield article_detail
+
+
+def get_time(time_str):
+    return time_str[6:10] + "/" + time_str[3:5] + "/" + time_str[0:2]
+
