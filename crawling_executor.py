@@ -19,6 +19,7 @@ from StockInfoCrawler.spiders.cnbc_spider import CnbcSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
 from StockInfoCrawler.spiders.forbesvietnam_spider import ForbesVietNamSpider
 from StockInfoCrawler.spiders.hnx_disclosure_spider import HnxDisclosureSpider
+from StockInfoCrawler.spiders.hsx_spider import HsxSpider
 from StockInfoCrawler.spiders.nytimes_spider import NYTimesSpider
 from StockInfoCrawler.spiders.nguoitieudung_spider import NguoiTieuDungSpider
 from StockInfoCrawler.spiders.reuters_spider import ReutersSpider
@@ -46,9 +47,12 @@ idx_count = 1
 baocongthuong_idx = str(idx_count)
 idx_count = idx_count + 1
 baodientuchinhphu_idx = str(idx_count)
+idx_count = idx_count + 1
 forbesvietnam_idx = str(idx_count)
 idx_count = idx_count + 1
 hnx_idx = str(idx_count)
+idx_count = idx_count + 1
+hsx_idx = str(idx_count)
 idx_count = idx_count + 1
 nguoitieudung_idx = str(idx_count)
 idx_count = idx_count + 1
@@ -94,6 +98,7 @@ else:
     print("[{0}] baodientu.chinhphu.vn".format(baodientuchinhphu_idx))
     print("[{0}] forbesvietnam.com.vn".format(forbesvietnam_idx))
     print("[{0}] hnx.vn (Thông tin công bố HNX)".format(hnx_idx))
+    print("[{0}] hsx.vn (Thông tin công bố HSX)".format(hsx_idx))
     print("[{0}] nguoitieudung.com.vn".format(nguoitieudung_idx))
     print("[{0}] sbv.gov.vn (Ngân Hàng Nhà Nước)".format(sbv_idx))
     print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)".format(scic_idx))
@@ -213,6 +218,10 @@ if forbesvietnam_idx in reqOpt:
 if hnx_idx in reqOpt:
     # TODO iterate sub-menu + paging, 1 exported file
     process.crawl(HnxDisclosureSpider)
+if hsx_idx in reqOpt:
+    hsx_spider = HsxSpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(hsx_spider, kw=keyword)
 if nguoitieudung_idx in reqOpt:
     # TODO Entire page?
     nguoitieudung_spider = NguoiTieuDungSpider(kw=keyword)
@@ -276,7 +285,6 @@ process.start()
 # TODO http://tapchitaichinh.vn/thi-truong-tai-chinh/
 # TODO http://kinhtevn.com.vn
 # TODO http://nhipcaudautu.vn
-# TODO http://thoibaonganhang.vn/
 # TODO http://www.ssc.gov.vn/ubck/faces/vi/vimenu/vipages_vitintucsukien/phathanh
 # ?_afrWindowId=y2lp9w8o6_70&_afrLoop=22847863432695794&_afrWindowMode=0&_adf.ctrl-state=1azrsvakbj_4
 # #%40%3F_afrWindowId%3Dy2lp9w8o6_70%26_afrLoop%3D22847863432695794%26_afrWindowMode%3D0%26_adf.ctrl-state%3Dy2lp9w8o6_90
