@@ -6,6 +6,7 @@ import numpy
 import logging
 
 from commons.clean_crawled_data import clean_up_data
+from commons.website_idx_enum import WEBSITE_IDX
 
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
@@ -42,45 +43,6 @@ clean_up_data()
 news_spider_count = 16
 availableList = ["{0}".format(x) for x in range(1, news_spider_count + 1)]
 
-# Dosmestic website indexes
-idx_count = 1
-baocongthuong_idx = str(idx_count)
-idx_count = idx_count + 1
-baodientuchinhphu_idx = str(idx_count)
-idx_count = idx_count + 1
-forbesvietnam_idx = str(idx_count)
-idx_count = idx_count + 1
-hnx_idx = str(idx_count)
-idx_count = idx_count + 1
-hsx_idx = str(idx_count)
-idx_count = idx_count + 1
-nguoitieudung_idx = str(idx_count)
-idx_count = idx_count + 1
-sbv_idx = str(idx_count)
-idx_count = idx_count + 1
-scic_idx = str(idx_count)
-idx_count = idx_count + 1
-taichinhdientu_idx = str(idx_count)
-idx_count = idx_count + 1
-theleader_idx = str(idx_count)
-idx_count = idx_count + 1
-thoibaonganhang_idx = str(idx_count)
-idx_count = idx_count + 1
-thoibaotaichinhvietnam_idx = str(idx_count)
-idx_count = idx_count + 1
-vneconomy_idx = str(idx_count)
-idx_count = idx_count + 1
-vietnamfinance_idx = str(idx_count)
-
-# International website indexes
-idx_count = idx_count + 1
-bloomberg_idx = str(idx_count)
-idx_count = idx_count + 1
-cnbc_idx = str(idx_count)
-idx_count = idx_count + 1
-reuters_idx = str(idx_count)
-idx_count = idx_count + 1
-nytimes_idx = str(idx_count)
 
 # Display options
 inputOpt = input("Chỉ số cơ bản(s) hay tin tức(n)? [s/n]:")
@@ -94,24 +56,24 @@ if inputOpt == "s":
 # News
 else:
     print("Lựa chọn hiện có: ")
-    print("[{0}] baocongthuong.com.vn".format(baocongthuong_idx))
-    print("[{0}] baodientu.chinhphu.vn".format(baodientuchinhphu_idx))
-    print("[{0}] forbesvietnam.com.vn".format(forbesvietnam_idx))
-    print("[{0}] hnx.vn (Thông tin công bố HNX)".format(hnx_idx))
-    print("[{0}] hsx.vn (Thông tin công bố HSX)".format(hsx_idx))
-    print("[{0}] nguoitieudung.com.vn".format(nguoitieudung_idx))
-    print("[{0}] sbv.gov.vn (Ngân Hàng Nhà Nước)".format(sbv_idx))
-    print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)".format(scic_idx))
-    print("[{0}] taichinhdientu.vn".format(taichinhdientu_idx))
-    print("[{0}] theleader.vn".format(theleader_idx))
-    print("[{0}] thoibaonganhang.vn".format(thoibaonganhang_idx))
-    print("[{0}] thoibaotaichinhvietnam.vn".format(thoibaotaichinhvietnam_idx))
-    print("[{0}] vneconomy.vn".format(vneconomy_idx))
-    print("[{0}] vietnamfinance.vn".format(vietnamfinance_idx))
-    print("[{0}] bloomberg.com".format(bloomberg_idx))
-    print("[{0}] cnbc.com".format(cnbc_idx))
-    print("[{0}] reuters.com".format(reuters_idx))
-    print("[{0}] nytimes.com".format(nytimes_idx))
+    print("[{0}] baocongthuong.com.vn".format(WEBSITE_IDX.BAOCONGTHUONG_IDX.value))
+    print("[{0}] baodientu.chinhphu.vn".format(WEBSITE_IDX.BAODIENTUCHINHPHU_IDX.value))
+    print("[{0}] forbesvietnam.com.vn".format(WEBSITE_IDX.FORBESVIETNAM_IDX.value))
+    print("[{0}] hnx.vn (Thông tin công bố HNX)".format(WEBSITE_IDX.HNX_IDX.value))
+    print("[{0}] hsx.vn (Thông tin công bố HSX)".format(WEBSITE_IDX.HSX_IDX.value))
+    print("[{0}] nguoitieudung.com.vn".format(WEBSITE_IDX.NGUOITIEUDUNG_IDX.value))
+    print("[{0}] sbv.gov.vn (Ngân Hàng Nhà Nước)".format(WEBSITE_IDX.SBV_IDX.value))
+    print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)".format(WEBSITE_IDX.SCIC_IDX.value))
+    print("[{0}] taichinhdientu.vn".format(WEBSITE_IDX.TAICHINHDIENTU_IDX.value))
+    print("[{0}] theleader.vn".format(WEBSITE_IDX.THELEADER_IDX.value))
+    print("[{0}] thoibaonganhang.vn".format(WEBSITE_IDX.THOIBAONGANHANG_IDX.value))
+    print("[{0}] thoibaotaichinhvietnam.vn".format(WEBSITE_IDX.THOIBAOTAICHINHVIETNAM_IDX.value))
+    print("[{0}] vneconomy.vn".format(WEBSITE_IDX.VNECONOMY_IDX.value))
+    print("[{0}] vietnamfinance.vn".format(WEBSITE_IDX.VIETNAMFINANCE_IDX.value))
+    print("[{0}] bloomberg.com".format(WEBSITE_IDX.BLOOMBERG_IDX.value))
+    print("[{0}] cnbc.com".format(WEBSITE_IDX.CNBC_IDX.value))
+    print("[{0}] reuters.com".format(WEBSITE_IDX.REUTERS_IDX.value))
+    print("[{0}] nytimes.com".format(WEBSITE_IDX.NYTIMES_IDX.value))
     print("\n")
 
     # Prompt spiders
@@ -203,74 +165,74 @@ if "999" in reqOpt:
 
 # News
 # TODO Add timestamp filter
-if baocongthuong_idx in reqOpt:
+if WEBSITE_IDX.BAOCONGTHUONG_IDX in reqOpt:
     # TODO Entire page?
     baocongthuong_spider = BaoCongThuongSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(baocongthuong_spider, kw=keyword)
-if baodientuchinhphu_idx in reqOpt:
+if WEBSITE_IDX.BAODIENTUCHINHPHU_IDX in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     process.crawl(BaoDienTuChinhPhuSpider)
-if forbesvietnam_idx in reqOpt:
+if WEBSITE_IDX.FORBESVIETNAM_IDX in reqOpt:
     forbesvietnam_spider = ForbesVietNamSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(forbesvietnam_spider, kw=keyword)
-if hnx_idx in reqOpt:
+if WEBSITE_IDX.HNX_IDX in reqOpt:
     # TODO iterate sub-menu + paging, 1 exported file
     process.crawl(HnxDisclosureSpider)
-if hsx_idx in reqOpt:
+if WEBSITE_IDX.HSX_IDX in reqOpt:
     hsx_spider = HsxSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(hsx_spider, kw=keyword)
-if nguoitieudung_idx in reqOpt:
+if WEBSITE_IDX.NGUOITIEUDUNG_IDX in reqOpt:
     # TODO Entire page?
     nguoitieudung_spider = NguoiTieuDungSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(nguoitieudung_spider, kw=keyword)
-if sbv_idx in reqOpt:
+if WEBSITE_IDX.SBV_IDX in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     process.crawl(SbvSpider)
-if scic_idx in reqOpt:
+if WEBSITE_IDX.SCIC_IDX in reqOpt:
     scic_spider = ScicSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(scic_spider, kw=keyword)
-if taichinhdientu_idx in reqOpt:
+if WEBSITE_IDX.TAICHINHDIENTU_IDX in reqOpt:
     # TODO iterate sub-menu, 1 exported file, display url
     process.crawl(TaiChinhDienTuSpider)
-if theleader_idx in reqOpt:
+if WEBSITE_IDX.THELEADER_IDX in reqOpt:
     theleader_spider = TheLeaderSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(theleader_spider, kw=keyword)
-if thoibaonganhang_idx in reqOpt:
+if WEBSITE_IDX.THOIBAONGANHANG_IDX in reqOpt:
     thoibaonganhang_spider = ThoiBaoNganHangSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(thoibaonganhang_spider, kw=keyword)
-if thoibaotaichinhvietnam_idx in reqOpt:
+if WEBSITE_IDX.THOIBAOTAICHINHVIETNAM_IDX in reqOpt:
     thoibaotaichinhvietnam_spider = ThoiBaoTaiChinhVietNamSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(thoibaotaichinhvietnam_spider, kw=keyword)
-if vneconomy_idx in reqOpt:
+if WEBSITE_IDX.VNECONOMY_IDX in reqOpt:
     vneconomy_spider = VnEconomySpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(vneconomy_spider, kw=keyword)
-if vietnamfinance_idx in reqOpt:
+if WEBSITE_IDX.VIETNAMFINANCE_IDX in reqOpt:
     vietnamfinance_spider = VietnamFinanceSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(vietnamfinance_spider, kw=keyword)
 
-if bloomberg_idx in reqOpt:
+if WEBSITE_IDX.BLOOMBERG_IDX in reqOpt:
     bloomberg_spider = BloombergSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(bloomberg_spider, kw=keyword)
-if cnbc_idx in reqOpt:
+if WEBSITE_IDX.CNBC_IDX in reqOpt:
     cnbc_spider = CnbcSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(cnbc_spider, kw=keyword)
-if reuters_idx in reqOpt:
+if WEBSITE_IDX.REUTERS_IDX in reqOpt:
     reuters_spider = ReutersSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(reuters_spider, kw=keyword)
-if nytimes_idx in reqOpt:
+if WEBSITE_IDX.NYTIMES_IDX in reqOpt:
     nytimes_spider = NYTimesSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(nytimes_spider, kw=keyword)
@@ -298,3 +260,4 @@ process.start()
 
 
 # TODO https://www.dealstreetasia.com/countries/vietnam/
+# https://hnx.vn/ModuleArticles/ArticlesCPEtfs/NextPageTinCPNY_CBTCPH?pNumPage=1&pAction=0&pNhomTin=&pTieuDeTin=&pMaChungKhoan=&pFromDate=&pToDate=&pOrderBy=&pNumRecord=100
