@@ -2,9 +2,6 @@
 import scrapy
 import json
 import requests
-from scrapy.http import Request
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
 from datetime import date, timedelta
 
 
@@ -46,7 +43,7 @@ class HsxSpider(scrapy.Spider):
         response_json = json.loads(response.text)
         article_list = response_json.get("rows")
         for article in article_list:
-            article_detail = {"title": article.get("cell")[2][29:-7],
+            article_detail = {"title": article.get("cell")[2][27:-7],
                               "time": get_time(article.get("cell")[1]),
                               "link": self.target_root + article.get("cell")[0]}
             yield article_detail
