@@ -35,7 +35,7 @@ from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 
 
 # Global variable
-is_debug = False
+is_debug = True
 keyword = []
 # Clean up data folder
 clean_up_data()
