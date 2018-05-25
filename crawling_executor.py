@@ -177,15 +177,12 @@ if WEBSITE_IDX.BAODIENTUCHINHPHU_IDX.value in reqOpt:
     process.crawl(BaoDienTuChinhPhuSpider)
 if WEBSITE_IDX.FORBESVIETNAM_IDX.value in reqOpt:
     forbesvietnam_spider = ForbesVietNamSpider(kw=keyword)
-    # noinspection PyTypeChecker    
+    # noinspection PyTypeChecker
     process.crawl(forbesvietnam_spider, kw=keyword)
 if WEBSITE_IDX.HNX_IDX.value in reqOpt:
-    # TODO iterate sub-menu + paging, 1 exported file
     process.crawl(HnxSpider)
 if WEBSITE_IDX.HSX_IDX.value in reqOpt:
-    hsx_spider = HsxSpider(kw=keyword)
-    # noinspection PyTypeChecker
-    process.crawl(hsx_spider, kw=keyword)
+    process.crawl(HsxSpider)
 if WEBSITE_IDX.NGUOITIEUDUNG_IDX.value in reqOpt:
     # TODO Entire page?
     nguoitieudung_spider = NguoiTieuDungSpider(kw=keyword)
@@ -240,7 +237,7 @@ if WEBSITE_IDX.NYTIMES_IDX.value in reqOpt:
     process.crawl(nytimes_spider, kw=keyword)
 
 # Set logging level
-# logging.getLogger('scrapy').setLevel(logging.DEBUG)
+logging.getLogger('scrapy').setLevel(logging.DEBUG)
 
 # Start crawling
 process.start()
@@ -253,13 +250,10 @@ process.start()
 # ?_afrWindowId=y2lp9w8o6_70&_afrLoop=22847863432695794&_afrWindowMode=0&_adf.ctrl-state=1azrsvakbj_4
 # #%40%3F_afrWindowId%3Dy2lp9w8o6_70%26_afrLoop%3D22847863432695794%26_afrWindowMode%3D0%26_adf.ctrl-state%3Dy2lp9w8o6_90
 # TODO http://enternews.vn
-# TODO https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1953252732
 # TODO http://www.thesaigontimes.vn/kinhdoanh/
-# TODO https://www.hsx.vn/Modules/Cms/Web/NewsByCat/dca0933e-a578-4eaf-8b29-beb4575052c5?rid=1500303253
 # TODO http://www.mpi.gov.vn/Pages/chuyenmuctin.aspx?idcm=54
 # TODO http://www.moit.gov.vn/
 # TODO https://hnx.vn/thong-tin-cong-bo-ny-tcph.html
 
 
 # TODO https://www.dealstreetasia.com/countries/vietnam/
-# https://hnx.vn/ModuleArticles/ArticlesCPEtfs/NextPageTinCPNY_CBTCPH?pNumPage=1&pAction=0&pNhomTin=&pTieuDeTin=&pMaChungKhoan=&pFromDate=&pToDate=&pOrderBy=&pNumRecord=100

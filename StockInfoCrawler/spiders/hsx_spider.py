@@ -19,7 +19,7 @@ class HsxSpider(scrapy.Spider):
         "FEED_URI": "data/hsx.csv",
     }
 
-    def __init__(self, kw, **kwargs):
+    def __init__(self, **kwargs):
         init_url = "https://www.hsx.vn/Modules/CMS/Web/ArticleInCategory/dca0933e-a578-4eaf-8b29-beb4575052c5"\
                    + "?exclude=00000000-0000-0000-0000-000000000000&lim=True&pageFieldName1=FromDate"\
                    + "&pageFieldValue1={0}&pageFieldOperator1=eq&pageFieldName2=ToDate"\
@@ -34,9 +34,6 @@ class HsxSpider(scrapy.Spider):
         total_page = response_json.get("total")
         for i in range(1, total_page + 1):
             self.start_urls.append(init_url.format(self.last_two_weeks_str, self.today, i))
-        self.keyword = kw
-        if self.keyword:
-            self.custom_settings["FEED_URI"] = "data/hsx_refined.csv"
         super().__init__(**kwargs)
 
     def parse(self, response):
