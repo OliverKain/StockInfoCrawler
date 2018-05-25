@@ -19,7 +19,7 @@ from StockInfoCrawler.spiders.bloomberg_spider import BloombergSpider
 from StockInfoCrawler.spiders.cnbc_spider import CnbcSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
 from StockInfoCrawler.spiders.forbesvietnam_spider import ForbesVietNamSpider
-from StockInfoCrawler.spiders.hnx_disclosure_spider import HnxDisclosureSpider
+from StockInfoCrawler.spiders.hnx_spider import HnxSpider
 from StockInfoCrawler.spiders.hsx_spider import HsxSpider
 from StockInfoCrawler.spiders.nytimes_spider import NYTimesSpider
 from StockInfoCrawler.spiders.nguoitieudung_spider import NguoiTieuDungSpider
@@ -87,7 +87,7 @@ else:
             inputOpt = input("Hãy nhập lựa chọn của bạn [1-" + str(len(availableList)) + "]:")
             while int(inputOpt.lower()) not in availableList:
                 inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
-            reqOpt = [inputOpt]
+            reqOpt = [int(inputOpt)]
         # Multiple sites
         elif inputOpt == "m":
             inputOpt = input("Hãy nhập danh sách các website muốn lấy, cách nhau bởi dấu phẩy[1-{0}]:"
@@ -177,11 +177,11 @@ if WEBSITE_IDX.BAODIENTUCHINHPHU_IDX.value in reqOpt:
     process.crawl(BaoDienTuChinhPhuSpider)
 if WEBSITE_IDX.FORBESVIETNAM_IDX.value in reqOpt:
     forbesvietnam_spider = ForbesVietNamSpider(kw=keyword)
-    # noinspection PyTypeChecker
+    # noinspection PyTypeChecker    
     process.crawl(forbesvietnam_spider, kw=keyword)
 if WEBSITE_IDX.HNX_IDX.value in reqOpt:
     # TODO iterate sub-menu + paging, 1 exported file
-    process.crawl(HnxDisclosureSpider)
+    process.crawl(HnxSpider)
 if WEBSITE_IDX.HSX_IDX.value in reqOpt:
     hsx_spider = HsxSpider(kw=keyword)
     # noinspection PyTypeChecker
@@ -240,7 +240,7 @@ if WEBSITE_IDX.NYTIMES_IDX.value in reqOpt:
     process.crawl(nytimes_spider, kw=keyword)
 
 # Set logging level
-logging.getLogger('scrapy').setLevel(logging.DEBUG)
+# logging.getLogger('scrapy').setLevel(logging.DEBUG)
 
 # Start crawling
 process.start()

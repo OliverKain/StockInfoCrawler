@@ -19,7 +19,8 @@ FEED_EXPORTERS = {
 FEED_EXPORT_ENCODING = 'utf-8'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'StockInfoCrawler (+http://www.yourdomain.com)'
+# USER_AGENT = 'StockInfoCrawler (+http://www.example.com)'
+USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False

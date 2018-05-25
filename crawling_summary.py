@@ -26,4 +26,7 @@ for csvfile in glob.glob("data/*.csv"):
         for r, row in enumerate(data):
             for c, col in enumerate(row):
                 worksheet.write(r, c, col)
-workbook.close()
+try:
+    workbook.close()
+except OSError as err:
+    print("OS error: {0}".format(err))
