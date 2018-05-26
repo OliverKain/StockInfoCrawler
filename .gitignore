@@ -4,3 +4,4 @@ venv/
 data/
 input/
 .vscode/
+stats/holding\.csv
