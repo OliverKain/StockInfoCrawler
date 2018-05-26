@@ -98,19 +98,19 @@ def get_holdings(mode):
             f.write(line)
 
     # Print top 10 holdings
-    df = pd.read_csv('holding.csv')[:10]
-    print(tabulate(df, headers='keys', tablefmt='psql'))
+    df = pd.read_csv('holding.csv')
+    filtered_df = df.drop(df.columns[[1, 2, 7, 9, 10, 11, 13, 14]], axis=1)
+    filtered_df = filtered_df.loc[df['Country'] == 'Vietnam']
+    print(tabulate(filtered_df, headers='keys', tablefmt='psql'))
 
 
-print('iShares Core S&P 500 ETF')
-print('Average Annual:')
-get_average_annual('core500')
-print('Cumulative:')
-get_cumulative('core500')
-print('Cumulative:')
-get_cumulative('core500')
-print('Holdings:')
-get_holdings('core500')
+# print('iShares Core S&P 500 ETF')
+# print('Average Annual:')
+# get_average_annual('core500')
+# print('Cumulative:')
+# get_cumulative('core500')
+# print('Holdings:')
+# get_holdings('core500')
 
 print('iShares MSCI Frontier 100 ETF')
 print('Average Annual:')
