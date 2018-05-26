@@ -6,7 +6,7 @@ import numpy
 import logging
 
 from commons.clean_crawled_data import clean_up_data
-from commons.website_idx_enum import WEBSITE_IDX
+from commons.website_idx_enum import WebsiteIdx
 
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
@@ -40,7 +40,7 @@ keyword = []
 # Clean up data folder
 clean_up_data()
 
-availableList = range(1, len(WEBSITE_IDX) + 1)
+availableList = range(1, len(WebsiteIdx) + 1)
 
 
 # Display options
@@ -55,24 +55,24 @@ if inputOpt == "s":
 # News
 else:
     print("Lựa chọn hiện có: ")
-    print("[{0}] baocongthuong.com.vn".format(WEBSITE_IDX.BAOCONGTHUONG_IDX.value))
-    print("[{0}] baodientu.chinhphu.vn".format(WEBSITE_IDX.BAODIENTUCHINHPHU_IDX.value))
-    print("[{0}] forbesvietnam.com.vn".format(WEBSITE_IDX.FORBESVIETNAM_IDX.value))
-    print("[{0}] hnx.vn (Thông tin công bố HNX)".format(WEBSITE_IDX.HNX_IDX.value))
-    print("[{0}] hsx.vn (Thông tin công bố HSX)".format(WEBSITE_IDX.HSX_IDX.value))
-    print("[{0}] nguoitieudung.com.vn".format(WEBSITE_IDX.NGUOITIEUDUNG_IDX.value))
-    print("[{0}] sbv.gov.vn (Ngân Hàng Nhà Nước)".format(WEBSITE_IDX.SBV_IDX.value))
-    print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)".format(WEBSITE_IDX.SCIC_IDX.value))
-    print("[{0}] taichinhdientu.vn".format(WEBSITE_IDX.TAICHINHDIENTU_IDX.value))
-    print("[{0}] theleader.vn".format(WEBSITE_IDX.THELEADER_IDX.value))
-    print("[{0}] thoibaonganhang.vn".format(WEBSITE_IDX.THOIBAONGANHANG_IDX.value))
-    print("[{0}] thoibaotaichinhvietnam.vn".format(WEBSITE_IDX.THOIBAOTAICHINHVIETNAM_IDX.value))
-    print("[{0}] vneconomy.vn".format(WEBSITE_IDX.VNECONOMY_IDX.value))
-    print("[{0}] vietnamfinance.vn".format(WEBSITE_IDX.VIETNAMFINANCE_IDX.value))
-    print("[{0}] bloomberg.com".format(WEBSITE_IDX.BLOOMBERG_IDX.value))
-    print("[{0}] cnbc.com".format(WEBSITE_IDX.CNBC_IDX.value))
-    print("[{0}] reuters.com".format(WEBSITE_IDX.REUTERS_IDX.value))
-    print("[{0}] nytimes.com".format(WEBSITE_IDX.NYTIMES_IDX.value))
+    print("[{0}] baocongthuong.com.vn".format(WebsiteIdx.BAOCONGTHUONG_IDX.value))
+    print("[{0}] baodientu.chinhphu.vn".format(WebsiteIdx.BAODIENTUCHINHPHU_IDX.value))
+    print("[{0}] forbesvietnam.com.vn".format(WebsiteIdx.FORBESVIETNAM_IDX.value))
+    print("[{0}] hnx.vn (Thông tin công bố HNX)".format(WebsiteIdx.HNX_IDX.value))
+    print("[{0}] hsx.vn (Thông tin công bố HSX)".format(WebsiteIdx.HSX_IDX.value))
+    print("[{0}] nguoitieudung.com.vn".format(WebsiteIdx.NGUOITIEUDUNG_IDX.value))
+    print("[{0}] sbv.gov.vn (Ngân Hàng Nhà Nước)".format(WebsiteIdx.SBV_IDX.value))
+    print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)".format(WebsiteIdx.SCIC_IDX.value))
+    print("[{0}] taichinhdientu.vn".format(WebsiteIdx.TAICHINHDIENTU_IDX.value))
+    print("[{0}] theleader.vn".format(WebsiteIdx.THELEADER_IDX.value))
+    print("[{0}] thoibaonganhang.vn".format(WebsiteIdx.THOIBAONGANHANG_IDX.value))
+    print("[{0}] thoibaotaichinhvietnam.vn".format(WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value))
+    print("[{0}] vneconomy.vn".format(WebsiteIdx.VNECONOMY_IDX.value))
+    print("[{0}] vietnamfinance.vn".format(WebsiteIdx.VIETNAMFINANCE_IDX.value))
+    print("[{0}] bloomberg.com".format(WebsiteIdx.BLOOMBERG_IDX.value))
+    print("[{0}] cnbc.com".format(WebsiteIdx.CNBC_IDX.value))
+    print("[{0}] reuters.com".format(WebsiteIdx.REUTERS_IDX.value))
+    print("[{0}] nytimes.com".format(WebsiteIdx.NYTIMES_IDX.value))
     print("\n")
 
     # Prompt spiders
@@ -94,7 +94,7 @@ else:
                                 .format(str(len(availableList))))
             while True:
                 if re.match(r"^\d(,[\d]+)+$", inputOpt):
-                    optList = list(map(int,inputOpt.split(",")))
+                    optList = list(map(int, inputOpt.split(",")))
                     if len(numpy.unique(optList)) < len(optList):
                         # Has duplicate options
                         inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
@@ -118,14 +118,15 @@ else:
             inputOpt = input("Hãy nhập lại lựa chọn [v/w]:")
         if inputOpt == "v":
             # VN News
-            reqOpt = [WEBSITE_IDX.BAOCONGTHUONG_IDX.value, WEBSITE_IDX.FORBESVIETNAM_IDX.value,
-                      WEBSITE_IDX.NGUOITIEUDUNG_IDX.value, WEBSITE_IDX.SCIC_IDX.value,
-                      WEBSITE_IDX.THELEADER_IDX.value, WEBSITE_IDX.THOIBAOTAICHINHVIETNAM_IDX.value,
-                      WEBSITE_IDX.VIETNAMFINANCE_IDX.value, WEBSITE_IDX.VNECONOMY_IDX.value]
+            reqOpt = [WebsiteIdx.BAOCONGTHUONG_IDX.value, WebsiteIdx.FORBESVIETNAM_IDX.value,
+                      WebsiteIdx.HNX_IDX.value, WebsiteIdx.HSX_IDXs.value,
+                      WebsiteIdx.NGUOITIEUDUNG_IDX.value, WebsiteIdx.SCIC_IDX.value,
+                      WebsiteIdx.THELEADER_IDX.value, WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value,
+                      WebsiteIdx.VIETNAMFINANCE_IDX.value, WebsiteIdx.VNECONOMY_IDX.value]
         else:
             # World News
-            reqOpt = [WEBSITE_IDX.BLOOMBERG_IDX.value, WEBSITE_IDX.CNBC_IDX.value,
-                      WEBSITE_IDX.NYTIMES_IDX.value, WEBSITE_IDX.REUTERS_IDX.value]
+            reqOpt = [WebsiteIdx.BLOOMBERG_IDX.value, WebsiteIdx.CNBC_IDX.value,
+                      WebsiteIdx.NYTIMES_IDX.value, WebsiteIdx.REUTERS_IDX.value]
 
     # Prompt using keyword
     inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
@@ -167,71 +168,71 @@ if "999" in reqOpt:
 
 # News
 # TODO Add timestamp filter
-if WEBSITE_IDX.BAOCONGTHUONG_IDX.value in reqOpt:
+if WebsiteIdx.BAOCONGTHUONG_IDX.value in reqOpt:
     # TODO Entire page?
     baocongthuong_spider = BaoCongThuongSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(baocongthuong_spider, kw=keyword)
-if WEBSITE_IDX.BAODIENTUCHINHPHU_IDX.value in reqOpt:
+if WebsiteIdx.BAODIENTUCHINHPHU_IDX.value in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     process.crawl(BaoDienTuChinhPhuSpider)
-if WEBSITE_IDX.FORBESVIETNAM_IDX.value in reqOpt:
+if WebsiteIdx.FORBESVIETNAM_IDX.value in reqOpt:
     forbesvietnam_spider = ForbesVietNamSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(forbesvietnam_spider, kw=keyword)
-if WEBSITE_IDX.HNX_IDX.value in reqOpt:
+if WebsiteIdx.HNX_IDX.value in reqOpt:
     process.crawl(HnxSpider)
-if WEBSITE_IDX.HSX_IDX.value in reqOpt:
+if WebsiteIdx.HSX_IDX.value in reqOpt:
     process.crawl(HsxSpider)
-if WEBSITE_IDX.NGUOITIEUDUNG_IDX.value in reqOpt:
+if WebsiteIdx.NGUOITIEUDUNG_IDX.value in reqOpt:
     # TODO Entire page?
     nguoitieudung_spider = NguoiTieuDungSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(nguoitieudung_spider, kw=keyword)
-if WEBSITE_IDX.SBV_IDX.value in reqOpt:
+if WebsiteIdx.SBV_IDX.value in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     process.crawl(SbvSpider)
-if WEBSITE_IDX.SCIC_IDX.value in reqOpt:
+if WebsiteIdx.SCIC_IDX.value in reqOpt:
     scic_spider = ScicSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(scic_spider, kw=keyword)
-if WEBSITE_IDX.TAICHINHDIENTU_IDX.value in reqOpt:
+if WebsiteIdx.TAICHINHDIENTU_IDX.value in reqOpt:
     # TODO iterate sub-menu, 1 exported file, display url
     process.crawl(TaiChinhDienTuSpider)
-if WEBSITE_IDX.THELEADER_IDX.value in reqOpt:
+if WebsiteIdx.THELEADER_IDX.value in reqOpt:
     theleader_spider = TheLeaderSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(theleader_spider, kw=keyword)
-if WEBSITE_IDX.THOIBAONGANHANG_IDX.value in reqOpt:
+if WebsiteIdx.THOIBAONGANHANG_IDX.value in reqOpt:
     thoibaonganhang_spider = ThoiBaoNganHangSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(thoibaonganhang_spider, kw=keyword)
-if WEBSITE_IDX.THOIBAOTAICHINHVIETNAM_IDX.value in reqOpt:
+if WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value in reqOpt:
     thoibaotaichinhvietnam_spider = ThoiBaoTaiChinhVietNamSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(thoibaotaichinhvietnam_spider, kw=keyword)
-if WEBSITE_IDX.VNECONOMY_IDX.value in reqOpt:
+if WebsiteIdx.VNECONOMY_IDX.value in reqOpt:
     vneconomy_spider = VnEconomySpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(vneconomy_spider, kw=keyword)
-if WEBSITE_IDX.VIETNAMFINANCE_IDX.value in reqOpt:
+if WebsiteIdx.VIETNAMFINANCE_IDX.value in reqOpt:
     vietnamfinance_spider = VietnamFinanceSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(vietnamfinance_spider, kw=keyword)
 
-if WEBSITE_IDX.BLOOMBERG_IDX.value in reqOpt:
+if WebsiteIdx.BLOOMBERG_IDX.value in reqOpt:
     bloomberg_spider = BloombergSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(bloomberg_spider, kw=keyword)
-if WEBSITE_IDX.CNBC_IDX.value in reqOpt:
+if WebsiteIdx.CNBC_IDX.value in reqOpt:
     cnbc_spider = CnbcSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(cnbc_spider, kw=keyword)
-if WEBSITE_IDX.REUTERS_IDX.value in reqOpt:
+if WebsiteIdx.REUTERS_IDX.value in reqOpt:
     reuters_spider = ReutersSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(reuters_spider, kw=keyword)
-if WEBSITE_IDX.NYTIMES_IDX.value in reqOpt:
+if WebsiteIdx.NYTIMES_IDX.value in reqOpt:
     nytimes_spider = NYTimesSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(nytimes_spider, kw=keyword)

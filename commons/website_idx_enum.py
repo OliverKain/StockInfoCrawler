@@ -2,9 +2,9 @@
 from enum import Enum, auto
 
 
-class WEBSITE_IDX(Enum):
+class WebsiteIdx(Enum):
     
-# Dosmestic website indexes
+    # Dosmestic website indexes
     BAOCONGTHUONG_IDX = auto()
     BAODIENTUCHINHPHU_IDX = auto()
     FORBESVIETNAM_IDX = auto()
@@ -20,7 +20,7 @@ class WEBSITE_IDX(Enum):
     VNECONOMY_IDX = auto()
     VIETNAMFINANCE_IDX = auto()
 
-# International website indexes
+    # International website indexes
     BLOOMBERG_IDX = auto()
     CNBC_IDX = auto()
     REUTERS_IDX = auto()
