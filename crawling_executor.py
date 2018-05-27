@@ -33,13 +33,13 @@ from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChi
 from StockInfoCrawler.spiders.vietnamfinance_spider import VietnamFinanceSpider
 from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 
-
 # Global variable
 is_debug = True
 keyword = []
 # Clean up data folder
 clean_up_data()
 
+# noinspection PyTypeChecker
 availableList = range(1, len(WebsiteIdx) + 1)
 
 
@@ -67,8 +67,8 @@ else:
     print("[{0}] theleader.vn".format(WebsiteIdx.THELEADER_IDX.value))
     print("[{0}] thoibaonganhang.vn".format(WebsiteIdx.THOIBAONGANHANG_IDX.value))
     print("[{0}] thoibaotaichinhvietnam.vn".format(WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value))
-    print("[{0}] vneconomy.vn".format(WebsiteIdx.VNECONOMY_IDX.value))
     print("[{0}] vietnamfinance.vn".format(WebsiteIdx.VIETNAMFINANCE_IDX.value))
+    print("[{0}] vneconomy.vn".format(WebsiteIdx.VNECONOMY_IDX.value))
     print("[{0}] bloomberg.com".format(WebsiteIdx.BLOOMBERG_IDX.value))
     print("[{0}] cnbc.com".format(WebsiteIdx.CNBC_IDX.value))
     print("[{0}] reuters.com".format(WebsiteIdx.REUTERS_IDX.value))
@@ -119,9 +119,10 @@ else:
         if inputOpt == "v":
             # VN News
             reqOpt = [WebsiteIdx.BAOCONGTHUONG_IDX.value, WebsiteIdx.FORBESVIETNAM_IDX.value,
-                      WebsiteIdx.HNX_IDX.value, WebsiteIdx.HSX_IDXs.value,
-                      WebsiteIdx.NGUOITIEUDUNG_IDX.value, WebsiteIdx.SCIC_IDX.value,
-                      WebsiteIdx.THELEADER_IDX.value, WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value,
+                      WebsiteIdx.HNX_IDX.value, WebsiteIdx.HSX_IDX.value,
+                      WebsiteIdx.NGUOITIEUDUNG_IDX.value,  # WebsiteIdx.SCIC_IDX.value,
+                      WebsiteIdx.THELEADER_IDX.value, WebsiteIdx.THOIBAONGANHANG_IDX.value,
+                      WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value,
                       WebsiteIdx.VIETNAMFINANCE_IDX.value, WebsiteIdx.VNECONOMY_IDX.value]
         else:
             # World News
@@ -167,7 +168,6 @@ if "999" in reqOpt:
     process.crawl(BasicIndexesPowerSpider)
 
 # News
-# TODO Add timestamp filter
 if WebsiteIdx.BAOCONGTHUONG_IDX.value in reqOpt:
     # TODO Entire page?
     baocongthuong_spider = BaoCongThuongSpider(kw=keyword)
@@ -175,6 +175,7 @@ if WebsiteIdx.BAOCONGTHUONG_IDX.value in reqOpt:
     process.crawl(baocongthuong_spider, kw=keyword)
 if WebsiteIdx.BAODIENTUCHINHPHU_IDX.value in reqOpt:
     # TODO iterate sub-menu, 1 exported file
+    # TODO Add timestamp filter
     process.crawl(BaoDienTuChinhPhuSpider)
 if WebsiteIdx.FORBESVIETNAM_IDX.value in reqOpt:
     forbesvietnam_spider = ForbesVietNamSpider(kw=keyword)
@@ -191,13 +192,16 @@ if WebsiteIdx.NGUOITIEUDUNG_IDX.value in reqOpt:
     process.crawl(nguoitieudung_spider, kw=keyword)
 if WebsiteIdx.SBV_IDX.value in reqOpt:
     # TODO iterate sub-menu, 1 exported file
+    # TODO Add timestamp filter
     process.crawl(SbvSpider)
 if WebsiteIdx.SCIC_IDX.value in reqOpt:
+    # TODO Add timestamp filter
     scic_spider = ScicSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(scic_spider, kw=keyword)
 if WebsiteIdx.TAICHINHDIENTU_IDX.value in reqOpt:
     # TODO iterate sub-menu, 1 exported file, display url
+    # TODO Add timestamp filter
     process.crawl(TaiChinhDienTuSpider)
 if WebsiteIdx.THELEADER_IDX.value in reqOpt:
     theleader_spider = TheLeaderSpider(kw=keyword)
@@ -211,14 +215,14 @@ if WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value in reqOpt:
     thoibaotaichinhvietnam_spider = ThoiBaoTaiChinhVietNamSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(thoibaotaichinhvietnam_spider, kw=keyword)
-if WebsiteIdx.VNECONOMY_IDX.value in reqOpt:
-    vneconomy_spider = VnEconomySpider(kw=keyword)
-    # noinspection PyTypeChecker
-    process.crawl(vneconomy_spider, kw=keyword)
 if WebsiteIdx.VIETNAMFINANCE_IDX.value in reqOpt:
     vietnamfinance_spider = VietnamFinanceSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(vietnamfinance_spider, kw=keyword)
+if WebsiteIdx.VNECONOMY_IDX.value in reqOpt:
+    vneconomy_spider = VnEconomySpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(vneconomy_spider, kw=keyword)
 
 if WebsiteIdx.BLOOMBERG_IDX.value in reqOpt:
     bloomberg_spider = BloombergSpider(kw=keyword)

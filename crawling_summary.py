@@ -1,17 +1,12 @@
-# import pandas as pd
+# -*- coding: utf-8 -*-
+
 import glob
 import csv
 import operator
 from xlsxwriter.workbook import Workbook
 
 
-# Export to Excel using pandas
-# df1 = pd.read_csv("data/crawledData_refined.csv")
-# writer = pd.ExcelWriter("data/crawledData.xlsx", engine="xlsxwriter")
-# df1.to_excel(writer, "Sheet1")
-# writer.save()
-
-workbook = Workbook("data/crawledData.xlsx")
+workbook = Workbook("data/_crawledData.xlsx")
 for csvfile in glob.glob("data/*.csv"):
     csv_name = csvfile[5:-4]
     worksheet = workbook.add_worksheet(csv_name.replace("_refined", ""))

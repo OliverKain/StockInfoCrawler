@@ -30,7 +30,7 @@ class HsxSpider(scrapy.Spider):
                    "&pageFieldOperator4=eq&pageCriteriaLength=4"\
                    "&_search=false&nd=1526850145275&rows=30&page={2}&sidx=id&sord=desc"
         list_json_link = init_url.format(self.last_two_weeks_str, self.today, 1)
-        response = requests.get(url=list_json_link)
+        response = requests.get(url=list_json_link, verify=False)
         response_json = json.loads(response.text)
         total_page = response_json.get("total")
         for i in range(1, total_page + 1):

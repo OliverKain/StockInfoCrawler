@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 import scrapy
 from scrapy.http import Request
 from commons.is_within_two_weeks import is_within_two_weeks
@@ -8,6 +9,7 @@ class VietnamFinanceSpider(scrapy.Spider):
     name = "vietnamfinance-spider"
 
     # Crawling Info
+    max_page_depth = 4
     target_root = "http://vietnamfinance.vn"
     top_focus_xpath = "//div[@class='focus-item']"
     top_focus_title_xpath = "./h2/a/text()"
@@ -19,52 +21,20 @@ class VietnamFinanceSpider(scrapy.Spider):
     article_title_xpath = "./div/h3/a/text()"
     article_link_xpath = "./div/h3/a/@href"
 
-    start_urls = [
-        "http://vietnamfinance.vn/tai-chinh-p1.htm",
-        "http://vietnamfinance.vn/tai-chinh-p2.htm",
-        "http://vietnamfinance.vn/tai-chinh-p3.htm",
-        "http://vietnamfinance.vn/tai-chinh-p4.htm",
-        "http://vietnamfinance.vn/ngan-hang-p1.htm",
-        "http://vietnamfinance.vn/ngan-hang-p2.htm",
-        "http://vietnamfinance.vn/ngan-hang-p3.htm",
-        "http://vietnamfinance.vn/ngan-hang-p4.htm",
-        "http://vietnamfinance.vn/thi-truong-p1.htm",
-        "http://vietnamfinance.vn/thi-truong-p2.htm",
-        "http://vietnamfinance.vn/thi-truong-p3.htm",
-        "http://vietnamfinance.vn/thi-truong-p4.htm",
-        "http://vietnamfinance.vn/do-thi-p1.htm",
-        "http://vietnamfinance.vn/do-thi-p2.htm",
-        "http://vietnamfinance.vn/do-thi-p3.htm",
-        "http://vietnamfinance.vn/do-thi-p4.htm",
-        "http://vietnamfinance.vn/tai-chinh-quoc-te-p1.htm",
-        "http://vietnamfinance.vn/tai-chinh-quoc-te-p2.htm",
-        "http://vietnamfinance.vn/tai-chinh-quoc-te-p3.htm",
-        "http://vietnamfinance.vn/tai-chinh-quoc-te-p4.htm",
-        "http://vietnamfinance.vn/ma-p1.htm",
-        "http://vietnamfinance.vn/ma-p2.htm",
-        "http://vietnamfinance.vn/ma-p3.htm",
-        "http://vietnamfinance.vn/ma-p4.htm",
-        "http://vietnamfinance.vn/startup-p1.htm",
-        "http://vietnamfinance.vn/startup-p2.htm",
-        "http://vietnamfinance.vn/startup-p3.htm",
-        "http://vietnamfinance.vn/startup-p4.htm",
-        "http://vietnamfinance.vn/nhan-vat-p1.htm",
-        "http://vietnamfinance.vn/nhan-vat-p2.htm",
-        "http://vietnamfinance.vn/nhan-vat-p3.htm",
-        "http://vietnamfinance.vn/nhan-vat-p4.htm",
-        "http://vietnamfinance.vn/thue-p1.htm",
-        "http://vietnamfinance.vn/thue-p2.htm",
-        "http://vietnamfinance.vn/thue-p3.htm",
-        "http://vietnamfinance.vn/thue-p4.htm",
-        "http://vietnamfinance.vn/tai-chinh-tieu-dung-p1.htm",
-        "http://vietnamfinance.vn/tai-chinh-tieu-dung-p2.htm",
-        "http://vietnamfinance.vn/tai-chinh-tieu-dung-p3.htm",
-        "http://vietnamfinance.vn/tai-chinh-tieu-dung-p4.htm",
-        "http://vietnamfinance.vn/dien-dan-vnf-p1.htm",
-        "http://vietnamfinance.vn/dien-dan-vnf-p2.htm",
-        "http://vietnamfinance.vn/dien-dan-vnf-p3.htm",
-        "http://vietnamfinance.vn/dien-dan-vnf-p4.htm",
-    ]
+    start_urls = []
+    for s in range(1, max_page_depth + 1):
+        start_urls.append("{0}/tai-chinh-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/ngan-hang-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/thi-truong-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/do-thi-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/tai-chinh-quoc-te-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/ma-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/startup-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/nhan-vat-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/thue-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/tai-chinh-tieu-dung-p{1}.htm".format(target_root, s))
+        start_urls.append("{0}/dien-dan-vnf-p{1}.htm".format(target_root, s))
+
     custom_settings = {
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/vietnamfinance.csv",
@@ -82,70 +52,68 @@ class VietnamFinanceSpider(scrapy.Spider):
             top_focus = response.selector.xpath(self.top_focus_xpath)
             top_link = top_focus.xpath(self.top_focus_link_xpath).extract_first().strip()
             article_detail = {"title": top_focus.xpath(self.top_focus_title_xpath).extract_first().strip(),
-                              "time": get_time_from_link(top_link),
+                              "time": "",
                               "intro": "",
                               "link": top_link}
-            if is_within_two_weeks(article_detail.get("time")):
-                if self.keyword:
-                    yield Request(url=top_link, callback=self.examine_article,
-                                   meta={"article_detail": article_detail,
-                                         "keyword": self.keyword})
-                else:
-                    yield article_detail
+            yield Request(url=top_link, callback=self.examine_article,
+                           meta={"article_detail": article_detail,
+                                 "keyword": self.keyword})
             top_list = response.selector.xpath(self.top_list_xpath)
             for item in top_list:
                 item_link = item.xpath(self.top_list_item_link_xpath).extract_first().strip()
                 article_detail = {"title": item.xpath(self.top_list_item_title_xpath).extract_first().strip(),
-                                  "time": get_time_from_link(item_link),
+                                  "time": "",
                                   "intro": "",
                                   "link": item_link}
-                if is_within_two_weeks(article_detail.get("time")):
-                    if self.keyword:
-                        yield Request(url=item_link, callback=self.examine_article,
-                                       meta={"article_detail": article_detail,
-                                             "keyword": self.keyword})
-                    else:
-                        yield article_detail
+                yield Request(url=item_link, callback=self.examine_article,
+                               meta={"article_detail": article_detail,
+                                     "keyword": self.keyword})
         # Get articles
         article_list = response.selector.xpath(self.list_xpath)
         for article in article_list:
             article_link = article.xpath(self.article_link_xpath).extract_first().strip()
             article_detail = {"title": article.xpath(self.article_title_xpath).extract_first().strip(),
-                              "time": get_time_from_link(article_link),
+                              "time": "",
                               "intro": "",
                               "link": article_link
                               }
-            if is_within_two_weeks(article_detail.get("time")):
-                if self.keyword:
-                    yield Request(url=article_link, callback=self.examine_article,
-                                   meta={"article_detail": article_detail,
-                                         "keyword": self.keyword})
-                else:
-                    yield article_detail
+            yield Request(url=article_link, callback=self.examine_article,
+                          meta={"article_detail": article_detail,
+                                "keyword": self.keyword})
 
     @staticmethod
     def examine_article(response):
+        article_detail = response.meta.get("article_detail")
         keyword_list = response.meta.get("keyword")
+
         article_content_xpath = "//div[@class='news-body-content']/p"
         article_content = response.selector.xpath(article_content_xpath)
+
+        time_str = "".join(response.selector.xpath("//div[@class='news-author-info']//text()").extract()).strip()
+        time_regex = "((0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/\d\d\d\d)"
+        article_detail["time"] = get_time(re.search(time_regex, time_str).group(1))
+
         match_flg = False
-        for kw in keyword_list:
-            for paragraph in article_content:
-                paragraph_content = str(paragraph.xpath(".//text()").extract_first())
-                if paragraph_content.lower().find(" " + kw + " ") != -1:
-                    # Keyword found
-                    match_flg = True
-                    break
-                # Keyword not found
-                match_flg = False
-            # Article did not have a keyword
-            if not match_flg:
-                break
-        if match_flg:
-            yield response.meta.get("article_detail")
-            pass
+        if is_within_two_weeks(article_detail.get("time")):
+            if keyword_list:
+                for kw in keyword_list:
+                    for paragraph in article_content:
+                        paragraph_content = str(paragraph.xpath(".//text()").extract_first())
+                        if paragraph_content.lower().find(" " + kw + " ") != -1:
+                            # Keyword found
+                            match_flg = True
+                            break
+                        # Keyword not found
+                        match_flg = False
+                    # Article did not have a keyword
+                    if not match_flg:
+                        break
+                if match_flg:
+                    yield response.meta.get("article_detail")
+                    pass
+            else:
+                yield response.meta.get("article_detail")
 
 
-def get_time_from_link(link):
-    timestamp_str = link[link.rfind("-") + 1:len(link) - len(".htm")]
-    return timestamp_str[0:4] + "/" + timestamp_str[4:6] + "/" + timestamp_str[6:8]
+def get_time(time_str):
+    return time_str[6:10] + "/" + time_str[3:5] + "/" + time_str[0:2]

@@ -17,8 +17,8 @@ class WebsiteIdx(Enum):
     THELEADER_IDX = auto()
     THOIBAONGANHANG_IDX = auto()
     THOIBAOTAICHINHVIETNAM_IDX = auto()
-    VNECONOMY_IDX = auto()
     VIETNAMFINANCE_IDX = auto()
+    VNECONOMY_IDX = auto()
 
     # International website indexes
     BLOOMBERG_IDX = auto()
