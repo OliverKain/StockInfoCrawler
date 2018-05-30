@@ -85,27 +85,46 @@ else:
         # Single site
         if inputOpt == "s":
             inputOpt = input("Hãy nhập lựa chọn của bạn [1-" + str(len(availableList)) + "]:")
-            while int(inputOpt.lower()) not in availableList:
-                inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
-            reqOpt = [int(inputOpt)]
+            while True:
+                # Convert into integer
+                try:
+                    inputOpt_str = int(inputOpt.lower())
+                except ValueError:
+                    inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
+                    continue
+                # Check if inputted index existed in provided list
+                if inputOpt_str not in availableList:
+                    inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
+                else:
+                    # Get inputted index
+                    reqOpt = [int(inputOpt)]
+                    break
+            # while int(inputOpt.lower()) not in availableList:
+            #     inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
         # Multiple sites
         elif inputOpt == "m":
             inputOpt = input("Hãy nhập danh sách các website muốn lấy, cách nhau bởi dấu phẩy[1-{0}]:"
                                 .format(str(len(availableList))))
             while True:
+                # RegEx checks inputted list
                 if re.match(r"^\d(,[\d]+)+$", inputOpt):
                     optList = list(map(int, inputOpt.split(",")))
+                    # Check duplicate indexes
                     if len(numpy.unique(optList)) < len(optList):
-                        # Has duplicate options
                         inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
                         continue
+                    # Check if inputted index existed in provided list
+                    is_existed = True
                     for opt in optList:
                         if opt not in availableList:
                             # Invalid options
                             inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
+                            is_existed = False
                             break
-                    reqOpt = optList
-                    break
+                    # Get inputted index list
+                    if is_existed:
+                        reqOpt = optList
+                        break
                 else:
                     # Invalid list
                     inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")

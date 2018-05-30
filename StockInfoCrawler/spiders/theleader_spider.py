@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
-from commons.is_within_two_weeks import is_within_two_weeks
+from commons.is_in_filtered_time import is_in_filtered_time
 
 
 class TheLeaderSpider(scrapy.Spider):
@@ -80,7 +80,7 @@ class TheLeaderSpider(scrapy.Spider):
                               "time": get_time_from_link(top_link),
                               "intro": "",
                               "link": self.target_root + top_link}
-            if is_within_two_weeks(article_detail.get("time")):
+            if is_in_filtered_time(article_detail.get("time")):
                 if self.keyword:
                     yield Request(url=(self.target_root + top_link), callback=self.examine_article,
                                    meta={"article_detail": article_detail,
@@ -97,7 +97,7 @@ class TheLeaderSpider(scrapy.Spider):
                                       "intro": "",
                                       "link": self.target_root + item_link
                                       }
-                    if is_within_two_weeks(article_detail.get("time")):
+                    if is_in_filtered_time(article_detail.get("time")):
                         if self.keyword:
                             yield Request(url=(self.target_root + item_link), callback=self.examine_article,
                                            meta={"article_detail": article_detail,
@@ -113,7 +113,7 @@ class TheLeaderSpider(scrapy.Spider):
                               "intro": article.xpath(self.article_intro_xpath).extract_first().strip(),
                               "link": self.target_root + article_link
                               }
-            if is_within_two_weeks(article_detail.get("time")):
+            if is_in_filtered_time(article_detail.get("time")):
                 if self.keyword:
                     yield Request(url=(self.target_root + article_link), callback=self.examine_article,
                                    meta={"article_detail": article_detail,

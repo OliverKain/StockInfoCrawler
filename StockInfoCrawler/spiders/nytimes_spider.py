@@ -2,7 +2,7 @@
 import json
 import scrapy
 from scrapy.http import Request
-from commons.is_within_two_weeks import is_within_two_weeks
+from commons.is_in_filtered_time import is_in_filtered_time
 
 
 class NYTimesSpider(scrapy.Spider):
@@ -35,7 +35,7 @@ class NYTimesSpider(scrapy.Spider):
                               "time": get_time(article["created"]),
                               "init": article["summary"],
                               "link": article_link}
-            if is_within_two_weeks(article_detail.get("time")):
+            if is_in_filtered_time(article_detail.get("time")):
                 if self.keyword:
                     yield Request(url=article_link, callback=self.examine_article,
                                   meta={"article_detail": article_detail, "keyword": self.keyword})

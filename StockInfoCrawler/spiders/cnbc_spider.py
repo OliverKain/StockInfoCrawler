@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
-from commons.is_within_two_weeks import is_within_two_weeks
+from commons.is_in_filtered_time import is_in_filtered_time
 
 
 class CnbcSpider(scrapy.Spider):
@@ -46,7 +46,7 @@ class CnbcSpider(scrapy.Spider):
                                           "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
                                           "init": headline.xpath(self.init_xpath).extract_first().strip(),
                                           "link": headline_link}
-                        if is_within_two_weeks(article_detail.get("time")):
+                        if is_in_filtered_time(article_detail.get("time")):
                             if self.keyword:
                                 yield Request(url=headline_link, callback=self.examine_article,
                                               meta={"article_detail": article_detail,
@@ -64,7 +64,7 @@ class CnbcSpider(scrapy.Spider):
                                           "time": headline.xpath(self.time_xpath).extract_first().strip()[1:11],
                                           "init": headline.xpath(self.init_xpath).extract_first().strip(),
                                           "link": headline_link}
-                        if is_within_two_weeks(article_detail.get("time")):
+                        if is_in_filtered_time(article_detail.get("time")):
                             if self.keyword:
                                 yield Request(url=headline_link, callback=self.examine_article,
                                               meta={"article_detail": article_detail,
@@ -82,7 +82,7 @@ class CnbcSpider(scrapy.Spider):
                                           "time": article.xpath(self.time_xpath).extract_first().strip()[1:11],
                                           "init": article.xpath(self.init_xpath).extract_first().strip(),
                                           "link": article_link}
-                        if is_within_two_weeks(article_detail.get("time")):
+                        if is_in_filtered_time(article_detail.get("time")):
                             if self.keyword:
                                 yield Request(url=article_link, callback=self.examine_article,
                                               meta={"article_detail": article_detail,
@@ -104,7 +104,7 @@ class CnbcSpider(scrapy.Spider):
                             "time": headline.xpath("./@href").extract_first().strip()[1:11],
                             "init": headline.xpath(self.init_xpath).extract_first().strip(),
                             "link": headline_link}
-                        if is_within_two_weeks(article_detail.get("time")):
+                        if is_in_filtered_time(article_detail.get("time")):
                             if self.keyword:
                                 yield Request(url=headline_link, callback=self.examine_article,
                                               meta={"article_detail": article_detail,
@@ -122,7 +122,7 @@ class CnbcSpider(scrapy.Spider):
                                           "time": article.xpath(self.time_xpath).extract_first().strip()[1:11],
                                           "init": article.xpath(self.init_xpath).extract_first().strip(),
                                           "link": article_link}
-                        if is_within_two_weeks(article_detail.get("time")):
+                        if is_in_filtered_time(article_detail.get("time")):
                             if self.keyword:
                                 yield Request(url=article_link, callback=self.examine_article,
                                               meta={"article_detail": article_detail,

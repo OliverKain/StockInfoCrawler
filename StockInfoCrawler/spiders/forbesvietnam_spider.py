@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
-from commons.is_within_two_weeks import is_within_two_weeks
+from commons.is_in_filtered_time import is_in_filtered_time
 
 
 class ForbesVietNamSpider(scrapy.Spider):
@@ -49,7 +49,7 @@ class ForbesVietNamSpider(scrapy.Spider):
                                   "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
                                   "init": "",
                                   "link": article_link}
-                if is_within_two_weeks(article_detail.get("time")):
+                if is_in_filtered_time(article_detail.get("time")):
                     if self.keyword:
                         yield Request(url=article_link, callback=self.examine_article,
                                        meta={"article_detail": article_detail,

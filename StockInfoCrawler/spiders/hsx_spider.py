@@ -18,6 +18,7 @@ class HsxSpider(scrapy.Spider):
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/hsx.csv",
         "DNS_TIMEOUT": "10",
+        "DOWNLOAD_DELAY": "1",
     }
 
     def __init__(self, **kwargs):

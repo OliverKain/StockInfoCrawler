@@ -4,34 +4,31 @@ from scrapy.http import Request
 from commons.is_in_filtered_time import is_in_filtered_time
 
 
-class BaoCongThuongSpider(scrapy.Spider):
-    name = "baocongthuong-spider"
+class EnterNewsSpider(scrapy.Spider):
+    name = "enternews-spider"
     # Crawling Info
-    max_page_depth = 5
-    target_root = "http://baocongthuong.com.vn"
-    headline_xpath = "//div[@class='content-wrap colx500']/section/section[@class='featured']/article"
-    headline_time_xpath = "./header/time/@datetime"
-    list_xpath = "//div[@class='content-wrap colx500']/section/section[@class='cate_content']/article"
-    title_xpath = "./header/h1/a/text()"
-    time_xpath = "./header/time/text()"
-    init_xpath = "./header/p/text()"
-    link_xpath = "./header/h1/a/@href"
+    max_page_depth = 8
+    target_root = "http://http://enternews.vn"
+    top_item_xpath = "//div[@class='col-xs-8 auto-padding-right top-center']/div[@class='top_item']"
+    top_list_xpath = "//div[@id='top-news-scroll']/ul[@class='list-text']/li"
+    list_xpath = "//ul[@class='feed']/li"
     start_urls = []
     for s in range(1, max_page_depth + 1):
-        start_urls.append("{0}/thuong-mai/xuat-nhap-khau&BRSR={1}".format(target_root, (s-1)*20))
-        start_urls.append("{0}/thuong-mai/xuc-tien-thuong-mai&BRSR={1}".format(target_root, (s-1)*20))
-        start_urls.append("{0}/thuong-mai/thi-truong-trong-nuoc&BRSR={1}".format(target_root, (s-1)*20))
-        start_urls.append("{0}/thuong-mai/thi-truong-mien-nui&BRSR={1}".format(target_root, (s-1)*20))
-        start_urls.append("{0}/thuong-mai/thuong-mai-dien-tu&BRSR={1}".format(target_root, (s-1)*20))
+        start_urls.append("{0}/doanh-nghiep-doanh-nhan-c11/page-{1}.html".format(target_root, s))
+        start_urls.append("{0}/thuong-mai/thi-truong-trong-nuoc&BRSR={1}".format(target_root, s))
+        start_urls.append("{0}/thuong-mai/thi-truong-mien-nui&BRSR={1}".format(target_root, s))
+        start_urls.append("{0}/thuong-mai/thuong-mai-dien-tu&BRSR={1}".format(target_root, s))
+    for s in range(1, 20 + 1):
+        start_urls.append("{0}/thoi-su-c82/page-{1}.html".format(target_root, s))
     custom_settings = {
         "FEED_FORMAT": "csv",
-        "FEED_URI": "data/baocongthuong.csv",
+        "FEED_URI": "data/enternews.csv",
     }
 
     def __init__(self, kw, **kwargs):
         self.keyword = kw
         if self.keyword:
-            self.custom_settings["FEED_URI"] = "data/baocongthuong_refined.csv"
+            self.custom_settings["FEED_URI"] = "data/enternews.csv"
         super().__init__(**kwargs)
 
     def parse(self, response):

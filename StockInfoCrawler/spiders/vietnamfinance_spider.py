@@ -2,7 +2,7 @@
 import re
 import scrapy
 from scrapy.http import Request
-from commons.is_within_two_weeks import is_within_two_weeks
+from commons.is_in_filtered_time import is_in_filtered_time
 
 
 class VietnamFinanceSpider(scrapy.Spider):
@@ -94,7 +94,7 @@ class VietnamFinanceSpider(scrapy.Spider):
         article_detail["time"] = get_time(re.search(time_regex, time_str).group(1))
 
         match_flg = False
-        if is_within_two_weeks(article_detail.get("time")):
+        if is_in_filtered_time(article_detail.get("time")):
             if keyword_list:
                 for kw in keyword_list:
                     for paragraph in article_content:

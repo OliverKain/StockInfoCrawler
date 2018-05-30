@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request, FormRequest
-from commons.is_within_two_weeks import is_within_two_weeks
+from commons.is_in_filtered_time import is_in_filtered_time
 
 
 class HnxSpider(scrapy.Spider):
@@ -52,7 +52,7 @@ class HnxSpider(scrapy.Spider):
                               "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
                               "init": init,
                               "link": ""}
-            if is_within_two_weeks(article_detail.get("time")):
+            if is_in_filtered_time(article_detail.get("time")):
                 yield article_detail
 
 
