@@ -7,7 +7,7 @@ class BaoDienTuChinhPhuSpider(scrapy.Spider):
     name = "baodientuchinhphu-spider"
 
     # Crawling Info
-    target_root = "http://baodientu.chinhphu.vn/"
+    target_root = "http://baodientu.chinhphu.vn"
     story_feature_xpath = "//form[@id='aspnetForm']/div[8]/div/div[@class='story featured']"
     list_xpath = "//form[@id='aspnetForm']/div[8]/div/div[@class='zonelisting']/div[@class='story']"
     title_xpath = "./p[@class='title']/a/text()"
@@ -27,7 +27,7 @@ class BaoDienTuChinhPhuSpider(scrapy.Spider):
         article_detail = {"title": story_feature.xpath(self.title_xpath).extract_first().strip(),
                           "time": get_time(story_feature.xpath(self.time_xpath).extract_first().strip()),
                           "init": story_feature.xpath(self.init_xpath).extract_first().strip(),
-                          "link": story_feature.xpath(self.link_xpath).extract_first().strip()}
+                          "link": self.target_root + story_feature.xpath(self.link_xpath).extract_first().strip()}
         if is_in_filtered_time(article_detail.get("time")):
             yield article_detail
         # Get article in list
@@ -36,7 +36,7 @@ class BaoDienTuChinhPhuSpider(scrapy.Spider):
             article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
                               "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
                               "init": article.xpath(self.init_xpath).extract_first().strip(),
-                              "link": story_feature.xpath(self.link_xpath).extract_first().strip()}
+                              "link": self.target_root + story_feature.xpath(self.link_xpath).extract_first().strip()}
             if is_in_filtered_time(article_detail.get("time")):
                 yield article_detail
 

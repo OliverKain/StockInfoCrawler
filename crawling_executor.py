@@ -17,6 +17,7 @@ from StockInfoCrawler.spiders.basic_indexes_power_spider import BasicIndexesPowe
 from StockInfoCrawler.spiders.basic_indexes_spider import BasicIndexesSpider
 from StockInfoCrawler.spiders.bloomberg_spider import BloombergSpider
 from StockInfoCrawler.spiders.cnbc_spider import CnbcSpider
+from StockInfoCrawler.spiders.enternews_spider import EnterNewsSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
 from StockInfoCrawler.spiders.forbesvietnam_spider import ForbesVietNamSpider
 from StockInfoCrawler.spiders.hnx_spider import HnxSpider
@@ -44,9 +45,10 @@ availableList = range(1, len(WebsiteIdx) + 1)
 
 
 # Display options
-inputOpt = input("Chỉ số cơ bản(s) hay tin tức(n)? [s/n]:")
-while inputOpt.lower() != "s" and inputOpt.lower() != "n":
-    inputOpt = input("Hãy nhập lại lựa chọn [s/n]:")
+# inputOpt = input("Chỉ số cơ bản(s) hay tin tức(n)? [s/n]:")
+# while inputOpt.lower() != "s" and inputOpt.lower() != "n":
+#     inputOpt = input("Hãy nhập lại lựa chọn [s/n]:")
+inputOpt = "n"
 
 # Stats
 if inputOpt == "s":
@@ -57,6 +59,7 @@ else:
     print("Lựa chọn hiện có: ")
     print("[{0}] baocongthuong.com.vn".format(WebsiteIdx.BAOCONGTHUONG_IDX.value))
     print("[{0}] baodientu.chinhphu.vn".format(WebsiteIdx.BAODIENTUCHINHPHU_IDX.value))
+    print("[{0}] enternews.com.vn".format(WebsiteIdx.ENTERNEWS_IDX.value))
     print("[{0}] forbesvietnam.com.vn".format(WebsiteIdx.FORBESVIETNAM_IDX.value))
     print("[{0}] hnx.vn (Thông tin công bố HNX)".format(WebsiteIdx.HNX_IDX.value))
     print("[{0}] hsx.vn (Thông tin công bố HSX)".format(WebsiteIdx.HSX_IDX.value))
@@ -196,6 +199,10 @@ if WebsiteIdx.BAODIENTUCHINHPHU_IDX.value in reqOpt:
     # TODO iterate sub-menu, 1 exported file
     # TODO Add timestamp filter
     process.crawl(BaoDienTuChinhPhuSpider)
+if WebsiteIdx.ENTERNEWS_IDX.value in reqOpt:
+    enternews_spider = EnterNewsSpider(kw=keyword)
+    # noinspection PyTypeChecker
+    process.crawl(enternews_spider, kw=keyword)
 if WebsiteIdx.FORBESVIETNAM_IDX.value in reqOpt:
     forbesvietnam_spider = ForbesVietNamSpider(kw=keyword)
     # noinspection PyTypeChecker
