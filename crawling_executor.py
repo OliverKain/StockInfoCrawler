@@ -141,8 +141,9 @@ else:
         if inputOpt == "v":
             # VN News
             reqOpt = [WebsiteIdx.BAOCONGTHUONG_IDX.value, WebsiteIdx.FORBESVIETNAM_IDX.value,
-                      WebsiteIdx.HNX_IDX.value, WebsiteIdx.HSX_IDX.value,
-                      WebsiteIdx.NGUOITIEUDUNG_IDX.value,  # WebsiteIdx.SCIC_IDX.value,
+                      WebsiteIdx.ENTERNEWS_IDX.value, WebsiteIdx.HNX_IDX.value,
+                      WebsiteIdx.HSX_IDX.value, WebsiteIdx.NGUOITIEUDUNG_IDX.value,
+                      # WebsiteIdx.SCIC_IDX.value,
                       WebsiteIdx.THELEADER_IDX.value, WebsiteIdx.THOIBAONGANHANG_IDX.value,
                       WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value,
                       WebsiteIdx.VIETNAMFINANCE_IDX.value, WebsiteIdx.VNECONOMY_IDX.value]
