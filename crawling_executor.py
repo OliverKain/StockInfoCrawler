@@ -37,7 +37,7 @@ from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 ########################################################################################################################
 # Global variable
 ########################################################################################################################
-is_debug = True
+is_debug = False
 keyword = []
 # noinspection PyTypeChecker
 availableList = range(1, len(WebsiteIdx) + 1)

@@ -139,17 +139,17 @@ def get_keyfact(mode):
     print("\n")
 
 
-print('------------------------------------------------------------------------------------------------------------')
-print('iShares Core S&P 500 ETF')
-print('------------------------------------------------------------------------------------------------------------')
-print('Average Annual:')
-get_average_annual('core500')
-print('Cumulative:')
-get_cumulative('core500')
-print('Holdings:')
-get_holdings('core500')
-print('Key Facts:')
-get_keyfact('core500')
+# print('------------------------------------------------------------------------------------------------------------')
+# print('iShares Core S&P 500 ETF')
+# print('------------------------------------------------------------------------------------------------------------')
+# print('Average Annual:')
+# get_average_annual('core500')
+# print('Cumulative:')
+# get_cumulative('core500')
+# print('Holdings:')
+# get_holdings('core500')
+# print('Key Facts:')
+# get_keyfact('core500')
 
 
 print('------------------------------------------------------------------------------------------------------------')
