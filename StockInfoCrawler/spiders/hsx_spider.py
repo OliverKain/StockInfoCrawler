@@ -6,7 +6,6 @@ from datetime import date, timedelta
 
 
 class HsxSpider(scrapy.Spider):
-    # TODO Iterate pages
     name = "hsx-spider"
 
     # Crawling Info

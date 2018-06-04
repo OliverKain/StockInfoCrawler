@@ -7,6 +7,7 @@ class WebsiteIdx(Enum):
     # Dosmestic website indexes
     BAOCONGTHUONG_IDX = auto()
     BAODIENTUCHINHPHU_IDX = auto()
+    BSC_IDX = auto()
     ENTERNEWS_IDX = auto()
     FORBESVIETNAM_IDX = auto()
     HNX_IDX = auto()

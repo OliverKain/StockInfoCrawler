@@ -16,6 +16,7 @@ from StockInfoCrawler.spiders.baodientuchinhphu_spider import BaoDienTuChinhPhuS
 from StockInfoCrawler.spiders.basic_indexes_power_spider import BasicIndexesPowerSpider
 from StockInfoCrawler.spiders.basic_indexes_spider import BasicIndexesSpider
 from StockInfoCrawler.spiders.bloomberg_spider import BloombergSpider
+from StockInfoCrawler.spiders.bsc_spider import BscSpider
 from StockInfoCrawler.spiders.cnbc_spider import CnbcSpider
 from StockInfoCrawler.spiders.enternews_spider import EnterNewsSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
@@ -37,7 +38,7 @@ from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 ########################################################################################################################
 # Global variable
 ########################################################################################################################
-is_debug = False
+is_debug = True
 keyword = []
 # noinspection PyTypeChecker
 availableList = range(1, len(WebsiteIdx) + 1)
@@ -63,6 +64,7 @@ else:
     # Vietnamese websites
     print("[{0}] baocongthuong.com.vn".format(WebsiteIdx.BAOCONGTHUONG_IDX.value))
     print("[{0}] baodientu.chinhphu.vn".format(WebsiteIdx.BAODIENTUCHINHPHU_IDX.value))
+    print("[{0}] bsc.com.vn".format(WebsiteIdx.BSC_IDX.value))
     print("[{0}] enternews.com.vn".format(WebsiteIdx.ENTERNEWS_IDX.value))
     print("[{0}] forbesvietnam.com.vn".format(WebsiteIdx.FORBESVIETNAM_IDX.value))
     print("[{0}] hnx.vn (Thông tin công bố HNX)".format(WebsiteIdx.HNX_IDX.value))
@@ -142,7 +144,8 @@ else:
             inputOpt = input("Hãy nhập lại lựa chọn [r/n]:")
         if inputOpt == "r":
             # Reports
-            reqOpt = [WebsiteIdx.HNX_IDX.value, WebsiteIdx.HSX_IDX.value]
+            reqOpt = [WebsiteIdx.HNX_IDX.value, WebsiteIdx.HSX_IDX.value,
+                      WebsiteIdx.BSC_IDX.value,]
         else:
             # News
             inputOpt = input("Trong nước (v) hay Thế giới(w)? [v/w]:")
@@ -207,6 +210,8 @@ if WebsiteIdx.HNX_IDX.value in reqOpt:
     process.crawl(HnxSpider)
 if WebsiteIdx.HSX_IDX.value in reqOpt:
     process.crawl(HsxSpider)
+if WebsiteIdx.BSC_IDX.value in reqOpt:
+    process.crawl(BscSpider)
 
 # News
 # Vietnamese websites
