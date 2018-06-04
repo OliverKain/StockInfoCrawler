@@ -8,8 +8,10 @@
 
 class StockinfocrawlerPipeline(object):
     currSpider = None
+
     def process_item(self, item, spider):
         self.currSpider = spider
         return item
+
     def spider_closed(self, spider):
         print(self.currSpider.name + " has finished.")

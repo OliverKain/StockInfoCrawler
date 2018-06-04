@@ -43,4 +43,3 @@ class BaoDienTuChinhPhuSpider(scrapy.Spider):
 
 def get_time(time_str):
     return time_str[13:17] + "/" + time_str[10:12] + "/" + time_str[7:9]
-
