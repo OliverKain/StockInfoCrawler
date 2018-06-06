@@ -11,12 +11,14 @@ from commons.website_idx_enum import WebsiteIdx
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
+from StockInfoCrawler.spiders.acbs_spider import AcbsSpider
 from StockInfoCrawler.spiders.baocongthuong_spider import BaoCongThuongSpider
 from StockInfoCrawler.spiders.baodientuchinhphu_spider import BaoDienTuChinhPhuSpider
 from StockInfoCrawler.spiders.basic_indexes_power_spider import BasicIndexesPowerSpider
 from StockInfoCrawler.spiders.basic_indexes_spider import BasicIndexesSpider
 from StockInfoCrawler.spiders.bloomberg_spider import BloombergSpider
 from StockInfoCrawler.spiders.bsc_spider import BscSpider
+from StockInfoCrawler.spiders.bvsc_spider import BvscSpider
 from StockInfoCrawler.spiders.cnbc_spider import CnbcSpider
 from StockInfoCrawler.spiders.enternews_spider import EnterNewsSpider
 from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
@@ -32,13 +34,14 @@ from StockInfoCrawler.spiders.taichinhdientu_spider import TaiChinhDienTuSpider
 from StockInfoCrawler.spiders.theleader_spider import TheLeaderSpider
 from StockInfoCrawler.spiders.thoibaonganhang_spider import ThoiBaoNganHangSpider
 from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChinhVietNamSpider
+from StockInfoCrawler.spiders.vcsc_spider import VcscSpider
 from StockInfoCrawler.spiders.vietnamfinance_spider import VietnamFinanceSpider
 from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 
 ########################################################################################################################
 # Global variable
 ########################################################################################################################
-is_debug = True
+is_debug = False
 keyword = []
 # noinspection PyTypeChecker
 availableList = range(1, len(WebsiteIdx) + 1)
@@ -62,9 +65,11 @@ if inputOpt == "s":
 else:
     print("Lựa chọn hiện có: ")
     # Vietnamese websites
+    print("[{0}] acbs.com.vn (Công ty chứng khoán ACBS)".format(WebsiteIdx.ACBS_IDX.value))
     print("[{0}] baocongthuong.com.vn".format(WebsiteIdx.BAOCONGTHUONG_IDX.value))
     print("[{0}] baodientu.chinhphu.vn".format(WebsiteIdx.BAODIENTUCHINHPHU_IDX.value))
-    print("[{0}] bsc.com.vn".format(WebsiteIdx.BSC_IDX.value))
+    print("[{0}] bsc.com.vn (Công ty chứng khoán BIDV)".format(WebsiteIdx.BSC_IDX.value))
+    print("[{0}] bvsc.com.vn (Công ty chứng khoán Bảo Việt)".format(WebsiteIdx.BVSC_IDX.value))
     print("[{0}] enternews.com.vn".format(WebsiteIdx.ENTERNEWS_IDX.value))
     print("[{0}] forbesvietnam.com.vn".format(WebsiteIdx.FORBESVIETNAM_IDX.value))
     print("[{0}] hnx.vn (Thông tin công bố HNX)".format(WebsiteIdx.HNX_IDX.value))
@@ -76,6 +81,7 @@ else:
     print("[{0}] theleader.vn".format(WebsiteIdx.THELEADER_IDX.value))
     print("[{0}] thoibaonganhang.vn".format(WebsiteIdx.THOIBAONGANHANG_IDX.value))
     print("[{0}] thoibaotaichinhvietnam.vn".format(WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value))
+    print("[{0}] vcsc.com.vn (Viet Capital Securities)".format(WebsiteIdx.VCSC_IDX.value))
     print("[{0}] vietnamfinance.vn".format(WebsiteIdx.VIETNAMFINANCE_IDX.value))
     print("[{0}] vneconomy.vn".format(WebsiteIdx.VNECONOMY_IDX.value))
     # International websites
@@ -144,8 +150,9 @@ else:
             inputOpt = input("Hãy nhập lại lựa chọn [r/n]:")
         if inputOpt == "r":
             # Reports
-            reqOpt = [WebsiteIdx.HNX_IDX.value, WebsiteIdx.HSX_IDX.value,
-                      WebsiteIdx.BSC_IDX.value,]
+            reqOpt = [WebsiteIdx.ACBS_IDX.value, WebsiteIdx.BSC_IDX.value,
+                      WebsiteIdx.BVSC.value, WebsiteIdx.HNX_IDX.value,
+                      WebsiteIdx.HSX_IDX.value, WebsiteIdx.VCSC_IDX.value,]
         else:
             # News
             inputOpt = input("Trong nước (v) hay Thế giới(w)? [v/w]:")
@@ -206,12 +213,18 @@ if "999" in reqOpt:
     process.crawl(BasicIndexesPowerSpider)
 
 # Reports
+if WebsiteIdx.ACBS_IDX.value in reqOpt:
+    process.crawl(AcbsSpider)
+if WebsiteIdx.BSC_IDX.value in reqOpt:
+    process.crawl(BscSpider)
+if WebsiteIdx.BVSC_IDX.value in reqOpt:
+    process.crawl(BvscSpider)
 if WebsiteIdx.HNX_IDX.value in reqOpt:
     process.crawl(HnxSpider)
 if WebsiteIdx.HSX_IDX.value in reqOpt:
     process.crawl(HsxSpider)
-if WebsiteIdx.BSC_IDX.value in reqOpt:
-    process.crawl(BscSpider)
+if WebsiteIdx.VCSC_IDX.value in reqOpt:
+    process.crawl(VcscSpider)
 
 # News
 # Vietnamese websites

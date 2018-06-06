@@ -5,9 +5,11 @@ from enum import Enum, auto
 class WebsiteIdx(Enum):
     
     # Dosmestic website indexes
+    ACBS_IDX = auto()
     BAOCONGTHUONG_IDX = auto()
     BAODIENTUCHINHPHU_IDX = auto()
     BSC_IDX = auto()
+    BVSC_IDX = auto()
     ENTERNEWS_IDX = auto()
     FORBESVIETNAM_IDX = auto()
     HNX_IDX = auto()
@@ -21,6 +23,7 @@ class WebsiteIdx(Enum):
     THOIBAOTAICHINHVIETNAM_IDX = auto()
     VIETNAMFINANCE_IDX = auto()
     VNECONOMY_IDX = auto()
+    VCSC_IDX = auto()
 
     # International website indexes
     BLOOMBERG_IDX = auto()

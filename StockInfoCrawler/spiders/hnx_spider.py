@@ -50,8 +50,7 @@ class HnxSpider(scrapy.Spider):
                 init = article.xpath(self.title_hnx_xpath).extract_first().strip()
             article_detail = {"title": title,
                               "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
-                              "init": init,
-                              "link": ""}
+                              "init": init,}
             if is_in_filtered_time(article_detail.get("time")):
                 yield article_detail
 

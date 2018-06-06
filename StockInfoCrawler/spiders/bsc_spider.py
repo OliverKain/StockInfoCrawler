@@ -2,6 +2,8 @@
 import scrapy
 import json
 import requests
+import html
+from scrapy.http import HtmlResponse
 from datetime import date, timedelta
 
 
@@ -10,7 +12,7 @@ class BscSpider(scrapy.Spider):
 
     # Crawling Info
     today = date.today().strftime("%Y.%m.%d")
-    last_two_weeks_str = (date.today() - timedelta(days=14)).strftime("%Y.%m.%d")
+    last_week_str = (date.today() - timedelta(days=7)).strftime("%Y.%m.%d")
     start_urls = []
     custom_settings = {
         "FEED_FORMAT": "csv",
@@ -23,13 +25,20 @@ class BscSpider(scrapy.Spider):
         init_url = "https://www.bsc.com.vn/api/Data/Report/SearchReports" \
                    + "?categoryID=1&sourceID=5&sectorID=null&symbol=&keywords=" \
                    + "&startDate={0}&endDate={1}&startIndex=0&count=500"
-        self.start_urls.append(init_url.format(self.last_two_weeks_str, self.today))
+        self.start_urls.append(init_url.format(self.last_week_str, self.today))
         super().__init__(**kwargs)
 
     def parse(self, response):
-        article_list = response.selector.xpath("//ReportInfo")
+        response.selector.remove_namespaces()
+        article_list = response.xpath("//ReportInfo")
         for article in article_list:
-            article_detail = {"title": article.get("Title"),
-                              "time": str(article.get("Date")[:10]).replace("-", "/"),
-                              "link": article.get("LinkDownload")}
+            init_res = HtmlResponse(
+                url="my HTML string",
+                body=article.xpath("./Description/text()").extract_first(),
+                encoding='utf-8')
+            init_res.xpath("//p//text()")
+            article_detail = {"title": article.xpath("./Title/text()").extract_first().strip(),
+                              "time": article.xpath("./Date/text()").extract_first().strip()[:10].replace("-", "/"),
+                              "init": "".join(init_res.xpath("//p//text()").extract()).strip(),
+                              "link": article.xpath("./LinkDownload/text()").extract_first().strip()}
             yield article_detail

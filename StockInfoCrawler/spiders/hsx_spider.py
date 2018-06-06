@@ -11,7 +11,7 @@ class HsxSpider(scrapy.Spider):
     # Crawling Info
     target_root = "https://www.hsx.vn/Modules/Cms/Web/LoadArticle?id="
     today = date.today().strftime("%d.%m.%Y")
-    last_two_weeks_str = (date.today() - timedelta(days=14)).strftime("%d.%m.%Y")
+    last_week_str = (date.today() - timedelta(days=14)).strftime("%d.%m.%Y")
     start_urls = []
     custom_settings = {
         "FEED_FORMAT": "csv",
@@ -29,12 +29,12 @@ class HsxSpider(scrapy.Spider):
                    "&pageFieldName4=CategoryId&pageFieldValue4=dca0933e-a578-4eaf-8b29-beb4575052c5"\
                    "&pageFieldOperator4=eq&pageCriteriaLength=4"\
                    "&_search=false&nd=1526850145275&rows=30&page={2}&sidx=id&sord=desc"
-        list_json_link = init_url.format(self.last_two_weeks_str, self.today, 1)
+        list_json_link = init_url.format(self.last_week_str, self.today, 1)
         response = requests.get(url=list_json_link, verify=False)
         response_json = json.loads(response.text)
         total_page = response_json.get("total")
         for i in range(1, total_page + 1):
-            self.start_urls.append(init_url.format(self.last_two_weeks_str, self.today, i))
+            self.start_urls.append(init_url.format(self.last_week_str, self.today, i))
         super().__init__(**kwargs)
 
     def parse(self, response):
