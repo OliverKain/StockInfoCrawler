@@ -151,8 +151,8 @@ else:
         if inputOpt == "r":
             # Reports
             reqOpt = [WebsiteIdx.ACBS_IDX.value, WebsiteIdx.BSC_IDX.value,
-                      WebsiteIdx.BVSC.value, WebsiteIdx.HNX_IDX.value,
-                      WebsiteIdx.HSX_IDX.value, WebsiteIdx.VCSC_IDX.value,]
+                      WebsiteIdx.BVSC_IDX.value, WebsiteIdx.HNX_IDX.value,
+                      WebsiteIdx.HSX_IDX.value, WebsiteIdx.VCSC_IDX.value, ]
         else:
             # News
             inputOpt = input("Trong nước (v) hay Thế giới(w)? [v/w]:")

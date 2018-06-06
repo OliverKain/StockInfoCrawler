@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import json
-import requests
-import html
 from scrapy.http import HtmlResponse
 from datetime import date, timedelta
 

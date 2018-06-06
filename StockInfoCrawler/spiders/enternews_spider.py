@@ -60,6 +60,7 @@ class EnterNewsSpider(scrapy.Spider):
                 yield article_detail
             # Get top list
             top_list = response.selector.xpath(self.top_list_xpath)
+            top_list_item_link = ""
             for item in top_list:
                 top_list_item_link = item.xpath(self.top_list_item_link_xpath).extract_first().strip()
                 article_detail = {"title": item.xpath(self.top_list_item_title_xpath).extract_first().strip(),
@@ -79,7 +80,7 @@ class EnterNewsSpider(scrapy.Spider):
             article_link = article.xpath(self.list_item_link_xpath).extract_first().strip()
             time_str = "".join(article.xpath(self.list_item_time_xpath).extract()).strip()
             time_regex = "((0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/\d\d\d\d)"
-            time_str = re.search(time_regex,time_str).group(1)
+            time_str = re.search(time_regex, time_str).group(1)
             article_detail = {"title": article.xpath(self.list_item_title_xpath).extract_first().strip(),
                               "time": get_time(time_str),
                               "init": article.xpath(self.list_item_init_xpath).extract_first().strip(),
@@ -88,7 +89,7 @@ class EnterNewsSpider(scrapy.Spider):
                 if self.keyword:
                     yield Request(url=article_link, callback=self.examine_article,
                                     meta={"article_detail": article_detail,
-                                        "keyword": self.keyword})
+                                          "keyword": self.keyword})
                 else:
                     yield article_detail
 

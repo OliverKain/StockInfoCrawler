@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import json
-import requests
-import html
 from datetime import date, timedelta
 
 
@@ -22,7 +19,7 @@ class VcscSpider(scrapy.Spider):
         start_urls.append(
             "https://www.vcsc.com.vn/readingbook/loadmore.do"
             + "?cat=&language=1&from={0}&to={1}&offset={2}&stockcode=&industry="
-                .format(last_week_str, today, s))
+            .format(last_week_str, today, s))
     custom_settings = {
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/vcsc.csv",

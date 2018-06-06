@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import json
-import requests
-import html
 from commons.is_in_filtered_time import is_in_filtered_time
 
 
