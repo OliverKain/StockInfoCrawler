@@ -23,6 +23,7 @@ class WebsiteIdx(Enum):
     THOIBAOTAICHINHVIETNAM_IDX = auto()
     VIETNAMFINANCE_IDX = auto()
     VNECONOMY_IDX = auto()
+    VCBS_IDX = auto()
     VCSC_IDX = auto()
 
     # International website indexes

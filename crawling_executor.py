@@ -34,6 +34,7 @@ from StockInfoCrawler.spiders.taichinhdientu_spider import TaiChinhDienTuSpider
 from StockInfoCrawler.spiders.theleader_spider import TheLeaderSpider
 from StockInfoCrawler.spiders.thoibaonganhang_spider import ThoiBaoNganHangSpider
 from StockInfoCrawler.spiders.thoibaotaichinhvietnam_spider import ThoiBaoTaiChinhVietNamSpider
+from StockInfoCrawler.spiders.vcbs_spider import VcbsSpider
 from StockInfoCrawler.spiders.vcsc_spider import VcscSpider
 from StockInfoCrawler.spiders.vietnamfinance_spider import VietnamFinanceSpider
 from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
@@ -81,6 +82,7 @@ else:
     print("[{0}] theleader.vn".format(WebsiteIdx.THELEADER_IDX.value))
     print("[{0}] thoibaonganhang.vn".format(WebsiteIdx.THOIBAONGANHANG_IDX.value))
     print("[{0}] thoibaotaichinhvietnam.vn".format(WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value))
+    print("[{0}] vcbs.com.vn (Công ty chứng khoán VCB)".format(WebsiteIdx.VCBS_IDX.value))
     print("[{0}] vcsc.com.vn (Viet Capital Securities)".format(WebsiteIdx.VCSC_IDX.value))
     print("[{0}] vietnamfinance.vn".format(WebsiteIdx.VIETNAMFINANCE_IDX.value))
     print("[{0}] vneconomy.vn".format(WebsiteIdx.VNECONOMY_IDX.value))
@@ -152,7 +154,8 @@ else:
             # Reports
             reqOpt = [WebsiteIdx.ACBS_IDX.value, WebsiteIdx.BSC_IDX.value,
                       WebsiteIdx.BVSC_IDX.value, WebsiteIdx.HNX_IDX.value,
-                      WebsiteIdx.HSX_IDX.value, WebsiteIdx.VCSC_IDX.value, ]
+                      WebsiteIdx.HSX_IDX.value, WebsiteIdx.VCBS_IDX.value, 
+                      WebsiteIdx.VCSC_IDX.value, ]
         else:
             # News
             inputOpt = input("Trong nước (v) hay Thế giới(w)? [v/w]:")
@@ -223,6 +226,8 @@ if WebsiteIdx.HNX_IDX.value in reqOpt:
     process.crawl(HnxSpider)
 if WebsiteIdx.HSX_IDX.value in reqOpt:
     process.crawl(HsxSpider)
+if WebsiteIdx.VCBS_IDX.value in reqOpt:
+    process.crawl(VcbsSpider)
 if WebsiteIdx.VCSC_IDX.value in reqOpt:
     process.crawl(VcscSpider)
 
