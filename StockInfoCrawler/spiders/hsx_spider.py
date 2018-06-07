@@ -11,7 +11,7 @@ class HsxSpider(scrapy.Spider):
     # Crawling Info
     target_root = "https://www.hsx.vn/Modules/Cms/Web/LoadArticle?id="
     today = date.today().strftime("%d.%m.%Y")
-    last_week_str = (date.today() - timedelta(days=14)).strftime("%d.%m.%Y")
+    last_week_str = (date.today() - timedelta(days=7)).strftime("%d.%m.%Y")
     start_urls = []
     custom_settings = {
         "FEED_FORMAT": "csv",
