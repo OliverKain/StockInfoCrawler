@@ -44,6 +44,7 @@ from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 ########################################################################################################################
 is_debug = False
 keyword = []
+report_mode = ""
 # noinspection PyTypeChecker
 availableList = range(1, len(WebsiteIdx) + 1)
 
@@ -151,11 +152,14 @@ else:
         while inputOpt.lower() != "r" and inputOpt.lower() != "n":
             inputOpt = input("Hãy nhập lại lựa chọn [r/n]:")
         if inputOpt == "r":
+            inputOpt = input("Báo cáo công ty (c) hay Báo cáo thị trường(m) [c/m]:")
+            while inputOpt.lower() != "c" and inputOpt.lower() != "m":
+                inputOpt = input("Hãy nhập lại lựa chọn [c/m]:")
+            report_mode = inputOpt
             # Reports
             reqOpt = [WebsiteIdx.ACBS_IDX.value, WebsiteIdx.BSC_IDX.value,
-                      WebsiteIdx.BVSC_IDX.value, WebsiteIdx.HNX_IDX.value,
-                      WebsiteIdx.HSX_IDX.value, WebsiteIdx.VCBS_IDX.value, 
-                      WebsiteIdx.VCSC_IDX.value, ]
+                      WebsiteIdx.BVSC_IDX.value, WebsiteIdx.VCBS_IDX.value, 
+                      WebsiteIdx.VCSC_IDX.value,]
         else:
             # News
             inputOpt = input("Trong nước (v) hay Thế giới(w)? [v/w]:")
@@ -166,7 +170,8 @@ else:
                 # VN News
                 reqOpt = [WebsiteIdx.BAOCONGTHUONG_IDX.value, WebsiteIdx.FORBESVIETNAM_IDX.value,
                           WebsiteIdx.ENTERNEWS_IDX.value, WebsiteIdx.NGUOITIEUDUNG_IDX.value,
-                          # WebsiteIdx.SCIC_IDX.value,
+                          # WebsiteIdx.SCIC_IDX.value
+                          WebsiteIdx.HNX_IDX.value, WebsiteIdx.HSX_IDX.value,
                           WebsiteIdx.THELEADER_IDX.value, WebsiteIdx.THOIBAONGANHANG_IDX.value,
                           WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value,
                           WebsiteIdx.VIETNAMFINANCE_IDX.value, WebsiteIdx.VNECONOMY_IDX.value]
@@ -217,19 +222,26 @@ if "999" in reqOpt:
 
 # Reports
 if WebsiteIdx.ACBS_IDX.value in reqOpt:
-    process.crawl(AcbsSpider)
+    # noinspection PyTypeChecker
+    process.crawl(AcbsSpider, mode=report_mode)
 if WebsiteIdx.BSC_IDX.value in reqOpt:
-    process.crawl(BscSpider)
+    # noinspection PyTypeChecker
+    process.crawl(BscSpider, mode=report_mode)
 if WebsiteIdx.BVSC_IDX.value in reqOpt:
-    process.crawl(BvscSpider)
+    # noinspection PyTypeChecker
+    process.crawl(BvscSpider, mode=report_mode)
 if WebsiteIdx.HNX_IDX.value in reqOpt:
-    process.crawl(HnxSpider)
+    # noinspection PyTypeChecker
+    process.crawl(HnxSpider, mode=report_mode)
 if WebsiteIdx.HSX_IDX.value in reqOpt:
-    process.crawl(HsxSpider)
+    # noinspection PyTypeChecker
+    process.crawl(HsxSpider, mode=report_mode)
 if WebsiteIdx.VCBS_IDX.value in reqOpt:
-    process.crawl(VcbsSpider)
+    # noinspection PyTypeChecker
+    process.crawl(VcbsSpider, mode=report_mode)
 if WebsiteIdx.VCSC_IDX.value in reqOpt:
-    process.crawl(VcscSpider)
+    # noinspection PyTypeChecker
+    process.crawl(VcscSpider, mode=report_mode)
 
 # News
 # Vietnamese websites

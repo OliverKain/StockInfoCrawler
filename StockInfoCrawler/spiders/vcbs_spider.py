@@ -15,14 +15,22 @@ class VcbsSpider(scrapy.Spider):
     month_year_xpath = "./span[@class='nice_date']/p[@class='month_year']/text()"
     link_xpath = "./a/@href"
     start_urls = []
-    for s in range(1, max_depth + 1):
-        start_urls.append("http://vcbs.com.vn/vn/Services/AnalysisReports/4?page={0}".format(s))
     custom_settings = {
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/vcbs.csv",
         "DNS_TIMEOUT": "10",
         "DOWNLOAD_DELAY": "1",
     }
+
+    def __init__(self, mode, **kwargs):
+        self.mode = mode
+        if self.mode == "c":
+            for s in range(1, self.max_depth + 1):
+                self.start_urls.append("http://vcbs.com.vn/vn/Services/AnalysisReports/12?page={0}".format(s))
+        else:
+            for s in range(1, self.max_depth + 1):
+                self.start_urls.append("http://vcbs.com.vn/vn/Services/AnalysisReports/4?page={0}".format(s))
+        super().__init__(**kwargs)
     
     def parse(self, response):
         article_list = response.xpath(self.list_xpath)

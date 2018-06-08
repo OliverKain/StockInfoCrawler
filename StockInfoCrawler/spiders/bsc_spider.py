@@ -18,11 +18,22 @@ class BscSpider(scrapy.Spider):
         "DOWNLOAD_DELAY": "1",
     }
 
-    def __init__(self, **kwargs):
-        init_url = "https://www.bsc.com.vn/api/Data/Report/SearchReports" \
-                   + "?categoryID=1&sourceID=5&sectorID=null&symbol=&keywords=" \
-                   + "&startDate={0}&endDate={1}&startIndex=0&count=500"
-        self.start_urls.append(init_url.format(self.last_week_str, self.today))
+    def __init__(self, mode, **kwargs):
+        self.mode = mode
+        if self.mode == "c":
+            company_init_url = "https://www.bsc.com.vn/api/Data/Report/SearchReports" \
+                    + "?categoryID=1&sourceID=5&sectorID=null&symbol=&keywords=" \
+                    + "&startDate={0}&endDate={1}&startIndex=0&count=500"
+            self.start_urls.append(company_init_url.format(self.last_week_str, self.today))
+        else:
+            market_init_url1 = "https://www.bsc.com.vn/api/Data/Report/SearchReports" \
+                    + "?categoryID=4&sourceID=5&sectorID=null&symbol=&keywords=" \
+                    + "&startDate={0}&endDate={1}&startIndex=0&count=500"
+            self.start_urls.append(market_init_url1.format(self.last_week_str, self.today))
+            market_init_url2 = "https://www.bsc.com.vn/api/Data/Report/SearchReports" \
+                    + "?categoryID=19&sourceID=5&sectorID=null&symbol=&keywords=" \
+                    + "&startDate={0}&endDate={1}&startIndex=0&count=500"
+            self.start_urls.append(market_init_url2.format(self.last_week_str, self.today))
         super().__init__(**kwargs)
 
     def parse(self, response):
@@ -35,7 +46,7 @@ class BscSpider(scrapy.Spider):
                 encoding='utf-8')
             init_res.xpath("//p//text()")
             article_detail = {"title": article.xpath("./Title/text()").extract_first().strip(),
-                              "time": article.xpath("./Date/text()").extract_first().strip()[:10].replace("-", "/"),
-                              "init": "".join(init_res.xpath("//p//text()").extract()).strip(),
-                              "link": article.xpath("./LinkDownload/text()").extract_first().strip()}
+                            "time": article.xpath("./Date/text()").extract_first().strip()[:10].replace("-", "/"),
+                            "init": "".join(init_res.xpath("//p//text()").extract()).strip(),
+                            "link": article.xpath("./LinkDownload/text()").extract_first().strip()}
             yield article_detail

@@ -15,17 +15,28 @@ class VcscSpider(scrapy.Spider):
     time_xpath = "./div/div[1]/div/p[@class='date-title']/text()"
     init_xpath = "./div/div[1]/div/p[@class='news-text hidden-sm']/text()"
     start_urls = []
-    for s in range(0, max_depth + 1):
-        start_urls.append(
-            "https://www.vcsc.com.vn/readingbook/loadmore.do"
-            + "?cat=&language=1&from={0}&to={1}&offset={2}&stockcode=&industry="
-            .format(last_week_str, today, s))
     custom_settings = {
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/vcsc.csv",
         "DNS_TIMEOUT": "10",
         "DOWNLOAD_DELAY": "1",
     }
+
+    def __init__(self, mode, **kwargs):
+        self.mode = mode
+        if self.mode == "c":
+            for s in range(0, self.max_depth + 1):
+                self.start_urls.append(
+                    "https://www.vcsc.com.vn/readingbook/loadmore.do"
+                    + "?cat=&language=1&from={0}&to={1}&offset={2}&stockcode=&industry="
+                    .format(self.last_week_str, self.today, s))
+        else:
+            for s in range(0, self.max_depth + 1):
+                self.start_urls.append(
+                    "https://www.vcsc.com.vn/readingbook/loadmore.do"
+                    + "?cat=MC&language=1&from={0}&to={1}&offset={2}&stockcode=&industry="
+                    .format(self.last_week_str, self.today, s))
+        super().__init__(**kwargs)
     
     def parse(self, response):
         article_list = response.xpath(self.list_xpath)

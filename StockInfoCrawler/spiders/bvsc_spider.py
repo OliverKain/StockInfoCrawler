@@ -17,17 +17,28 @@ class BvscSpider(scrapy.Spider):
     time_xpath = "./td[1]/text()"
     link_xpath = "./td[3]/a/@href"
     start_urls = []
-    for s in range(1, max_depth + 1):
-        start_urls.append(
-            ("http://www.bvsc.com.vn/ViewReports.aspx?CategoryID=17&StartDate={0}&EndDate={1}"
-             + "&Cart_ctl00_webPartManager_wp484641337_wp148882691_cbReports_Callback_Param={2}")
-            .format(last_week_str, today, (s - 1) * 20))
     custom_settings = {
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/bvsc.csv",
         "DNS_TIMEOUT": "10",
         "DOWNLOAD_DELAY": "1",
     }
+
+    def __init__(self, mode, **kwargs):
+        self.mode = mode
+        if self.mode == "c":
+            for s in range(1, self.max_depth + 1):
+                self.start_urls.append(
+                    ("http://www.bvsc.com.vn/ViewReports.aspx?CategoryID=17&StartDate={0}&EndDate={1}"
+                    + "&Cart_ctl00_webPartManager_wp484641337_wp148882691_cbReports_Callback_Param={2}")
+                    .format(self.last_week_str, self.today, (s - 1) * 20))
+        else:
+            for s in range(1, self.max_depth + 1):
+                self.start_urls.append(
+                    ("http://www.bvsc.com.vn/ViewReports.aspx?CategoryID=33&StartDate={0}&EndDate={1}"
+                    + "&Cart_ctl00_webPartManager_wp484641337_wp148882691_cbReports_Callback_Param={2}")
+                    .format(self.last_week_str, self.today, (s - 1) * 20))
+        super().__init__(**kwargs)
 
     def parse(self, response):
         response.selector.remove_namespaces()
@@ -40,7 +51,6 @@ class BvscSpider(scrapy.Spider):
             if is_in_filtered_time(time_str):
                 article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
                                   "time": time_str,
-                                  "init": "",
                                   "link": article.xpath(self.link_xpath).extract_first().strip()}
                 yield article_detail
 
