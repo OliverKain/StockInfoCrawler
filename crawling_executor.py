@@ -25,6 +25,7 @@ from StockInfoCrawler.spiders.event_schedule_spider import EventScheduleSpider
 from StockInfoCrawler.spiders.forbesvietnam_spider import ForbesVietNamSpider
 from StockInfoCrawler.spiders.hnx_spider import HnxSpider
 from StockInfoCrawler.spiders.hsx_spider import HsxSpider
+from StockInfoCrawler.spiders.mbs_spider import MbsSpider
 from StockInfoCrawler.spiders.nytimes_spider import NYTimesSpider
 from StockInfoCrawler.spiders.nguoitieudung_spider import NguoiTieuDungSpider
 from StockInfoCrawler.spiders.reuters_spider import ReutersSpider
@@ -76,6 +77,7 @@ else:
     print("[{0}] forbesvietnam.com.vn".format(WebsiteIdx.FORBESVIETNAM_IDX.value))
     print("[{0}] hnx.vn (Thông tin công bố HNX)".format(WebsiteIdx.HNX_IDX.value))
     print("[{0}] hsx.vn (Thông tin công bố HSX)".format(WebsiteIdx.HSX_IDX.value))
+    print("[{0}] mbs.vn (Công ty chứng khoán MB)".format(WebsiteIdx.MBS_IDX.value))
     print("[{0}] nguoitieudung.com.vn".format(WebsiteIdx.NGUOITIEUDUNG_IDX.value))
     print("[{0}] sbv.gov.vn (Ngân Hàng Nhà Nước)".format(WebsiteIdx.SBV_IDX.value))
     print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)".format(WebsiteIdx.SCIC_IDX.value))
@@ -158,8 +160,9 @@ else:
             report_mode = inputOpt
             # Reports
             reqOpt = [WebsiteIdx.ACBS_IDX.value, WebsiteIdx.BSC_IDX.value,
-                      WebsiteIdx.BVSC_IDX.value, WebsiteIdx.VCBS_IDX.value, 
-                      WebsiteIdx.VCSC_IDX.value,]
+                      WebsiteIdx.BVSC_IDX.value, WebsiteIdx.MBS_IDX.value,
+                      WebsiteIdx.VCBS_IDX.value, WebsiteIdx.VCSC_IDX.value,]
+            # reqOpt = [WebsiteIdx.MBS_IDX.value]
         else:
             # News
             inputOpt = input("Trong nước (v) hay Thế giới(w)? [v/w]:")
@@ -236,6 +239,9 @@ if WebsiteIdx.HNX_IDX.value in reqOpt:
 if WebsiteIdx.HSX_IDX.value in reqOpt:
     # noinspection PyTypeChecker
     process.crawl(HsxSpider, mode=report_mode)
+if WebsiteIdx.MBS_IDX.value in reqOpt:
+    # noinspection PyTypeChecker
+    process.crawl(MbsSpider, mode=report_mode)
 if WebsiteIdx.VCBS_IDX.value in reqOpt:
     # noinspection PyTypeChecker
     process.crawl(VcbsSpider, mode=report_mode)

@@ -14,6 +14,7 @@ class WebsiteIdx(Enum):
     FORBESVIETNAM_IDX = auto()
     HNX_IDX = auto()
     HSX_IDX = auto()
+    MBS_IDX = auto()
     NGUOITIEUDUNG_IDX = auto()
     SBV_IDX = auto()
     SCIC_IDX = auto()
