@@ -7,3 +7,8 @@ def is_in_filtered_time(time_str):
     if time_str >= last_week_str:
         return True
     return False
+
+
+def get_formatted_past_date(prev_day, format_str):
+    return (date.today() - timedelta(days=prev_day)).strftime(format_str)
+

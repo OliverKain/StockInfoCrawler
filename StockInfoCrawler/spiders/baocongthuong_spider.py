@@ -2,27 +2,24 @@
 import scrapy
 from scrapy.http import Request
 from commons.is_in_filtered_time import is_in_filtered_time
+from commons.is_in_filtered_time import get_formatted_past_date
 
 
 class BaoCongThuongSpider(scrapy.Spider):
     name = "baocongthuong-spider"
     # Crawling Info
-    max_page_depth = 5
+    max_page_depth = 3
+    article_per_page = 10
     target_root = "http://baocongthuong.com.vn"
-    headline_xpath = "//div[@class='content-wrap colx500']/section/section[@class='featured']/article"
-    headline_time_xpath = "./header/time/@datetime"
-    list_xpath = "//div[@class='content-wrap colx500']/section/section[@class='cate_content']/article"
-    title_xpath = "./header/h1/a/text()"
-    time_xpath = "./header/time/text()"
-    init_xpath = "./header/p/text()"
-    link_xpath = "./header/h1/a/@href"
+    list_xpath = "//div[@class='bx-category-container fw lt clearfix']/article"
+    title_xpath = "./h3/a/text()"
+    init_xpath = "./div[@class='article-desc']/text()"
+    link_xpath = "./h3/a/@href"
     start_urls = []
-    for s in range(1, max_page_depth + 1):
-        start_urls.append("{0}/thuong-mai/xuat-nhap-khau&BRSR={1}".format(target_root, (s-1)*20))
-        start_urls.append("{0}/thuong-mai/xuc-tien-thuong-mai&BRSR={1}".format(target_root, (s-1)*20))
-        start_urls.append("{0}/thuong-mai/thi-truong-trong-nuoc&BRSR={1}".format(target_root, (s-1)*20))
-        start_urls.append("{0}/thuong-mai/thi-truong-mien-nui&BRSR={1}".format(target_root, (s-1)*20))
-        start_urls.append("{0}/thuong-mai/thuong-mai-dien-tu&BRSR={1}".format(target_root, (s-1)*20))
+    for prev_day in range(0, 8):
+        for s in range(0, max_page_depth):
+            start_urls.append("{0}/thuong-mai&fv={1}&BRSR={2}"
+                              .format(target_root, get_formatted_past_date(prev_day, "%Y-%m-%d"), s*article_per_page))
     custom_settings = {
         "FEED_FORMAT": "csv",
         "FEED_URI": "data/baocongthuong.csv",
@@ -35,36 +32,20 @@ class BaoCongThuongSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
-        # Get headline article
-        if str(response.request.url).endswith("&BRSR=0"):
-            headline = response.selector.xpath(self.headline_xpath)
-            headline_link = headline.xpath(self.link_xpath).extract_first().strip()
-            article_detail = {"title": headline.xpath(self.title_xpath).extract_first().strip(),
-                              "time": get_time(headline.xpath(self.headline_time_xpath).extract_first().strip()),
-                              "init": headline.xpath(self.init_xpath).extract_first().strip(),
-                              "link": headline_link}
-            if is_in_filtered_time(article_detail.get("time")):
-                if self.keyword:
-                    yield Request(url=headline_link, callback=self.examine_article,
-                                   meta={"article_detail": article_detail,
-                                         "keyword": self.keyword})
-                else:
-                    yield article_detail
         # Get article in list
         article_list = response.selector.xpath(self.list_xpath)
         for article in article_list:
             article_link = article.xpath(self.link_xpath).extract_first().strip()
             article_detail = {"title": article.xpath(self.title_xpath).extract_first().strip(),
-                              "time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
+                              #"time": get_time(article.xpath(self.time_xpath).extract_first().strip()),
                               "init": article.xpath(self.init_xpath).extract_first().strip(),
                               "link": article_link}
-            if is_in_filtered_time(article_detail.get("time")):
-                if self.keyword:
-                    yield Request(url=article_link, callback=self.examine_article,
-                                   meta={"article_detail": article_detail,
-                                         "keyword": self.keyword})
-                else:
-                    yield article_detail
+            if self.keyword:
+                yield Request(url=article_link, callback=self.examine_article,
+                               meta={"article_detail": article_detail,
+                                     "keyword": self.keyword})
+            else:
+                yield article_detail
 
     @staticmethod
     def examine_article(response):
