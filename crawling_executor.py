@@ -40,182 +40,205 @@ from StockInfoCrawler.spiders.vcsc_spider import VcscSpider
 from StockInfoCrawler.spiders.vietnamfinance_spider import VietnamFinanceSpider
 from StockInfoCrawler.spiders.vneconomy_spider import VnEconomySpider
 
-########################################################################################################################
-# Global variable
-########################################################################################################################
-is_debug = False
+# <editor-fold desc="">
+# </editor-fold>
+
+# <editor-fold desc="GLOBAL VARIABLES">
+is_debug = True
 keyword = []
 report_mode = ""
-# noinspection PyTypeChecker
 availableList = range(1, len(WebsiteIdx) + 1)
+# </editor-fold>
 
-
-########################################################################################################################
-# Display options
-########################################################################################################################
+# <editor-fold desc="GET REQUESTS">
 # Clean up data folder
 clean_up_data()
 
-# inputOpt = input("Chỉ số cơ bản(s) hay tin tức(n)? [s/n]:")
-# while inputOpt.lower() != "s" and inputOpt.lower() != "n":
-#     inputOpt = input("Hãy nhập lại lựa chọn [s/n]:")
+# <editor-fold desc="Display available options">
+print("Lựa chọn hiện có: ")
 
-# Stats
-inputOpt = "n"
-if inputOpt == "s":
-    reqOpt = ["999"]
-# News
-else:
-    print("Lựa chọn hiện có: ")
-    # Vietnamese websites
-    print("[{0}] acbs.com.vn (Công ty chứng khoán ACBS)".format(WebsiteIdx.ACBS_IDX.value))
-    print("[{0}] baocongthuong.com.vn".format(WebsiteIdx.BAOCONGTHUONG_IDX.value))
-    print("[{0}] baodientu.chinhphu.vn".format(WebsiteIdx.BAODIENTUCHINHPHU_IDX.value))
-    print("[{0}] bsc.com.vn (Công ty chứng khoán BIDV)".format(WebsiteIdx.BSC_IDX.value))
-    print("[{0}] bvsc.com.vn (Công ty chứng khoán Bảo Việt)".format(WebsiteIdx.BVSC_IDX.value))
-    print("[{0}] enternews.com.vn".format(WebsiteIdx.ENTERNEWS_IDX.value))
-    print("[{0}] forbesvietnam.com.vn".format(WebsiteIdx.FORBESVIETNAM_IDX.value))
-    print("[{0}] hnx.vn (Thông tin công bố HNX)".format(WebsiteIdx.HNX_IDX.value))
-    print("[{0}] hsx.vn (Thông tin công bố HSX)".format(WebsiteIdx.HSX_IDX.value))
-    print("[{0}] mbs.vn (Công ty chứng khoán MB)".format(WebsiteIdx.MBS_IDX.value))
-    print("[{0}] nguoitieudung.com.vn".format(WebsiteIdx.NGUOITIEUDUNG_IDX.value))
-    print("[{0}] sbv.gov.vn (Ngân Hàng Nhà Nước)".format(WebsiteIdx.SBV_IDX.value))
-    print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)".format(WebsiteIdx.SCIC_IDX.value))
-    print("[{0}] taichinhdientu.vn".format(WebsiteIdx.TAICHINHDIENTU_IDX.value))
-    print("[{0}] theleader.vn".format(WebsiteIdx.THELEADER_IDX.value))
-    print("[{0}] thoibaonganhang.vn".format(WebsiteIdx.THOIBAONGANHANG_IDX.value))
-    print("[{0}] thoibaotaichinhvietnam.vn".format(WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value))
-    print("[{0}] vcbs.com.vn (Công ty chứng khoán VCB)".format(WebsiteIdx.VCBS_IDX.value))
-    print("[{0}] vcsc.com.vn (Viet Capital Securities)".format(WebsiteIdx.VCSC_IDX.value))
-    print("[{0}] vietnamfinance.vn".format(WebsiteIdx.VIETNAMFINANCE_IDX.value))
-    print("[{0}] vneconomy.vn".format(WebsiteIdx.VNECONOMY_IDX.value))
-    # International websites
-    print("[{0}] bloomberg.com".format(WebsiteIdx.BLOOMBERG_IDX.value))
-    print("[{0}] cnbc.com".format(WebsiteIdx.CNBC_IDX.value))
-    print("[{0}] reuters.com".format(WebsiteIdx.REUTERS_IDX.value))
-    print("[{0}] nytimes.com".format(WebsiteIdx.NYTIMES_IDX.value))
-    print("\n")
+# Vietnamese websites
+print("[{0}] acbs.com.vn (Công ty chứng khoán ACBS)"
+      .format(WebsiteIdx.ACBS_IDX.value))
+print("[{0}] baocongthuong.com.vn"
+      .format(WebsiteIdx.BAOCONGTHUONG_IDX.value))
+print("[{0}] baodientu.chinhphu.vn"
+      .format(WebsiteIdx.BAODIENTUCHINHPHU_IDX.value))
+print("[{0}] bsc.com.vn (Công ty chứng khoán BIDV)"
+      .format(WebsiteIdx.BSC_IDX.value))
+print("[{0}] bvsc.com.vn (Công ty chứng khoán Bảo Việt)"
+      .format(WebsiteIdx.BVSC_IDX.value))
+print("[{0}] enternews.com.vn"
+      .format(WebsiteIdx.ENTERNEWS_IDX.value))
+print("[{0}] forbesvietnam.com.vn"
+      .format(WebsiteIdx.FORBESVIETNAM_IDX.value))
+print("[{0}] hnx.vn (Thông tin công bố HNX)"
+      .format(WebsiteIdx.HNX_IDX.value))
+print("[{0}] hsx.vn (Thông tin công bố HSX)"
+      .format(WebsiteIdx.HSX_IDX.value))
+print("[{0}] mbs.vn (Công ty chứng khoán MB)"
+      .format(WebsiteIdx.MBS_IDX.value))
+print("[{0}] nguoitieudung.com.vn"
+      .format(WebsiteIdx.NGUOITIEUDUNG_IDX.value))
+print("[{0}] sbv.gov.vn (Ngân Hàng Nhà Nước)"
+      .format(WebsiteIdx.SBV_IDX.value))
+print("[{0}] scic.vn (Tổng công ty Đầu tư và kinh doanh vốn nhà nước)"
+      .format(WebsiteIdx.SCIC_IDX.value))
+print("[{0}] taichinhdientu.vn"
+      .format(WebsiteIdx.TAICHINHDIENTU_IDX.value))
+print("[{0}] theleader.vn"
+      .format(WebsiteIdx.THELEADER_IDX.value))
+print("[{0}] thoibaonganhang.vn"
+      .format(WebsiteIdx.THOIBAONGANHANG_IDX.value))
+print("[{0}] thoibaotaichinhvietnam.vn"
+      .format(WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value))
+print("[{0}] vcbs.com.vn (Công ty chứng khoán VCB)"
+      .format(WebsiteIdx.VCBS_IDX.value))
+print("[{0}] vcsc.com.vn (Viet Capital Securities)"
+      .format(WebsiteIdx.VCSC_IDX.value))
+print("[{0}] vietnamfinance.vn"
+      .format(WebsiteIdx.VIETNAMFINANCE_IDX.value))
+print("[{0}] vneconomy.vn"
+      .format(WebsiteIdx.VNECONOMY_IDX.value))
 
-    # Debug Mode
-    if is_debug:
-        inputOpt = input("Một(s) hay nhiều(m) trang? [s/m]:")
-        reqOpt = ""
-        while inputOpt.lower() != "s" and inputOpt.lower() != "m":
-            inputOpt = input("Hãy nhập lại lựa chọn [s/m]:")
-        # Single site
-        if inputOpt == "s":
-            inputOpt = input("Hãy nhập lựa chọn của bạn [1-" + str(len(availableList)) + "]:")
-            while True:
-                # Convert into integer
-                try:
-                    inputOpt_str = int(inputOpt.lower())
-                except ValueError:
-                    inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
+# International websites
+print("[{0}] bloomberg.com"
+      .format(WebsiteIdx.BLOOMBERG_IDX.value))
+print("[{0}] cnbc.com"
+      .format(WebsiteIdx.CNBC_IDX.value))
+print("[{0}] reuters.com"
+      .format(WebsiteIdx.REUTERS_IDX.value))
+print("[{0}] nytimes.com"
+      .format(WebsiteIdx.NYTIMES_IDX.value))
+
+print("\n")
+# </editor-fold>
+
+# Debug Mode
+if is_debug:
+    inputOpt = input("Một(s) hay nhiều(m) trang? [s/m]:")
+    reqOpt = ""
+    while inputOpt.lower() != "s" and inputOpt.lower() != "m":
+        inputOpt = input("Hãy nhập lại lựa chọn [s/m]:")
+    # Single site
+    if inputOpt == "s":
+        inputOpt = input("Hãy nhập lựa chọn của bạn [1-" + str(len(availableList)) + "]:")
+        while True:
+            # Convert into integer
+            try:
+                inputOpt_str = int(inputOpt.lower())
+            except ValueError:
+                inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
+                continue
+            # Check if inputted index existed in provided list
+            if inputOpt_str not in availableList:
+                inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
+            else:
+                # Get inputted index
+                reqOpt = [int(inputOpt)]
+                break
+    # Multiple sites
+    else:
+        inputOpt = input("Hãy nhập danh sách các website muốn lấy, cách nhau bởi dấu phẩy[1-{0}]:"
+                            .format(str(len(availableList))))
+        while True:
+            # RegEx checks inputted list
+            if re.match(r"^\d(,[\d]+)+$", inputOpt):
+                optList = list(map(int, inputOpt.split(",")))
+                # Check duplicate indexes
+                if len(numpy.unique(optList)) < len(optList):
+                    inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
                     continue
                 # Check if inputted index existed in provided list
-                if inputOpt_str not in availableList:
-                    inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
-                else:
-                    # Get inputted index
-                    reqOpt = [int(inputOpt)]
-                    break
-            # while int(inputOpt.lower()) not in availableList:
-            #     inputOpt = input("Hãy nhập lại lựa chọn [1-" + str(len(availableList)) + "]:")
-        # Multiple sites
-        elif inputOpt == "m":
-            inputOpt = input("Hãy nhập danh sách các website muốn lấy, cách nhau bởi dấu phẩy[1-{0}]:"
-                                .format(str(len(availableList))))
-            while True:
-                # RegEx checks inputted list
-                if re.match(r"^\d(,[\d]+)+$", inputOpt):
-                    optList = list(map(int, inputOpt.split(",")))
-                    # Check duplicate indexes
-                    if len(numpy.unique(optList)) < len(optList):
+                is_existed = True
+                for opt in optList:
+                    if opt not in availableList:
+                        # Invalid options
                         inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
-                        continue
-                    # Check if inputted index existed in provided list
-                    is_existed = True
-                    for opt in optList:
-                        if opt not in availableList:
-                            # Invalid options
-                            inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
-                            is_existed = False
-                            break
-                    # Get inputted index list
-                    if is_existed:
-                        reqOpt = optList
+                        is_existed = False
                         break
-                else:
-                    # Invalid list
-                    inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
-    # Release Mode
-    else:
-        inputOpt = input("Báo cáo (r) hay Tin tức (n) [r/n]:")
-        while inputOpt.lower() != "r" and inputOpt.lower() != "n":
-            inputOpt = input("Hãy nhập lại lựa chọn [r/n]:")
-        if inputOpt == "r":
-            inputOpt = input("Báo cáo công ty (c) hay Báo cáo thị trường(m) [c/m]:")
-            while inputOpt.lower() != "c" and inputOpt.lower() != "m":
-                inputOpt = input("Hãy nhập lại lựa chọn [c/m]:")
-            report_mode = inputOpt
-            # Reports
-            reqOpt = [WebsiteIdx.ACBS_IDX.value, WebsiteIdx.BSC_IDX.value,
-                      WebsiteIdx.BVSC_IDX.value, WebsiteIdx.MBS_IDX.value,
-                      WebsiteIdx.VCBS_IDX.value, WebsiteIdx.VCSC_IDX.value,]
-            # reqOpt = [WebsiteIdx.MBS_IDX.value]
-        else:
-            # News
-            inputOpt = input("Trong nước (v) hay Thế giới(w)? [v/w]:")
-            reqOpt = ""
-            while inputOpt.lower() != "v" and inputOpt.lower() != "w":
-                inputOpt = input("Hãy nhập lại lựa chọn [v/w]:")
-            if inputOpt == "v":
-                # VN News
-                reqOpt = [WebsiteIdx.BAOCONGTHUONG_IDX.value, WebsiteIdx.FORBESVIETNAM_IDX.value,
-                          WebsiteIdx.ENTERNEWS_IDX.value, WebsiteIdx.NGUOITIEUDUNG_IDX.value,
-                          # WebsiteIdx.SCIC_IDX.value
-                          WebsiteIdx.HNX_IDX.value, WebsiteIdx.HSX_IDX.value,
-                          WebsiteIdx.THELEADER_IDX.value, WebsiteIdx.THOIBAONGANHANG_IDX.value,
-                          WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value,
-                          WebsiteIdx.VIETNAMFINANCE_IDX.value, WebsiteIdx.VNECONOMY_IDX.value]
-            else:
-                # World News
-                reqOpt = [WebsiteIdx.BLOOMBERG_IDX.value, WebsiteIdx.CNBC_IDX.value,
-                          WebsiteIdx.NYTIMES_IDX.value, WebsiteIdx.REUTERS_IDX.value]
-
-    # Prompt using keyword
-    inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
-    while inputOpt.lower() != "y" and inputOpt.lower() != "n":
-        inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
-    # Using keywords
-    if inputOpt == "y":
-        inputOpt = input("Có sử dụng các keyword đã định nghĩa sẵn trong input/keyword.csv? [y/n]:")
-        while inputOpt.lower() != "y" and inputOpt.lower() != "n":
-            inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
-        # Using predefined keywords
-        if inputOpt == "y":
-            with open("./input/keywords.csv", "rt", encoding="utf-8") as tmp:
-                reader = csv.reader(tmp)
-                for row in reader:
-                    keyword.append(str(row[0]))
-        # Manual adding keywords
-        else:
-            while True:
-                inputOpt = input("Hãy nhập các keyword, kết thúc keyword bằng Enter,"
-                                  + "hoàn thành việc nhập bằng cách nhập từ \"end\":")
-                if inputOpt.lower() == "end":
+                # Get inputted index list
+                if is_existed:
+                    reqOpt = optList
                     break
-                keyword.append(inputOpt)
+            else:
+                # Invalid list
+                inputOpt = input("Hãy nhập danh sách đúng qui cách [1-" + str(len(availableList)) + "]:")
+# Release Mode
+else:
+    inputOpt = input("Báo cáo (r) hay Tin tức (n) [r/n]:")
+    while inputOpt.lower() != "r" and inputOpt.lower() != "n":
+        inputOpt = input("Hãy nhập lại lựa chọn [r/n]:")
+    # Reports
+    if inputOpt == "r":
+        inputOpt = input("Báo cáo công ty (c) hay Báo cáo thị trường(m) [c/m]:")
+        while inputOpt.lower() != "c" and inputOpt.lower() != "m":
+            inputOpt = input("Hãy nhập lại lựa chọn [c/m]:")
+        report_mode = inputOpt
+        reqOpt = [WebsiteIdx.ACBS_IDX.value,
+                  WebsiteIdx.BSC_IDX.value,
+                  WebsiteIdx.BVSC_IDX.value,
+                  WebsiteIdx.MBS_IDX.value,
+                  WebsiteIdx.VCBS_IDX.value,
+                  WebsiteIdx.VCSC_IDX.value]
+    # News
+    else:
+        inputOpt = input("Trong nước (v) hay Thế giới(w)? [v/w]:")
+        reqOpt = ""
+        while inputOpt.lower() != "v" and inputOpt.lower() != "w":
+            inputOpt = input("Hãy nhập lại lựa chọn [v/w]:")
+        if inputOpt == "v":
+            # VN News
+            reqOpt = [WebsiteIdx.BAOCONGTHUONG_IDX.value,
+                      WebsiteIdx.FORBESVIETNAM_IDX.value,
+                      WebsiteIdx.ENTERNEWS_IDX.value,
+                      WebsiteIdx.NGUOITIEUDUNG_IDX.value,
+                      # WebsiteIdx.SCIC_IDX.value
+                      WebsiteIdx.HNX_IDX.value,
+                      WebsiteIdx.HSX_IDX.value,
+                      WebsiteIdx.THELEADER_IDX.value,
+                      WebsiteIdx.THOIBAONGANHANG_IDX.value,
+                      WebsiteIdx.THOIBAOTAICHINHVIETNAM_IDX.value,
+                      WebsiteIdx.VIETNAMFINANCE_IDX.value,
+                      WebsiteIdx.VNECONOMY_IDX.value]
+        else:
+            # World News
+            reqOpt = [WebsiteIdx.BLOOMBERG_IDX.value,
+                      WebsiteIdx.CNBC_IDX.value,
+                      WebsiteIdx.NYTIMES_IDX.value,
+                      WebsiteIdx.REUTERS_IDX.value]
 
-# Get global project settings
+# TODO Comment for testing
+# # Prompt using keyword
+# inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
+# while inputOpt.lower() != "y" and inputOpt.lower() != "n":
+#     inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
+# if inputOpt == "y":
+#     # Using keywords
+#     inputOpt = input("Có sử dụng các keyword đã định nghĩa sẵn trong input/keyword.csv? [y/n]:")
+#     while inputOpt.lower() != "y" and inputOpt.lower() != "n":
+#         inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
+#     # Using predefined keywords
+#     if inputOpt == "y":
+#         with open("./input/keywords.csv", "rt", encoding="utf-8") as tmp:
+#             reader = csv.reader(tmp)
+#             for row in reader:
+#                 keyword.append(str(row[0]))
+#     # Manual adding keywords
+#     else:
+#         while True:
+#             inputOpt = input("Hãy nhập các keyword, kết thúc keyword bằng Enter,"
+#                               + "hoàn thành việc nhập bằng cách nhập từ \"end\":")
+#             if inputOpt.lower() == "end":
+#                 break
+#             keyword.append(inputOpt)
+
+# Create crawling process (with setting)
 settings = get_project_settings()
-
-# Create new process
 process = CrawlerProcess(settings)
+# </editor-fold>
 
-########################################################################################################################
-# Add spiders
-########################################################################################################################
+# <editor-fold desc="CRAWLING PROCESS">
 # Stats
 # TODO single stock_id stats
 if "999" in reqOpt:
@@ -329,6 +352,7 @@ logging.getLogger('scrapy').setLevel(logging.DEBUG)
 
 # Start crawling
 process.start()
+# </editor-fold>
 
 # TODO http://tapchitaichinh.vn/kinh-te-vi-mo/
 # TODO http://tapchitaichinh.vn/thi-truong-tai-chinh/
