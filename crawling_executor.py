@@ -208,30 +208,29 @@ else:
                       WebsiteIdx.NYTIMES_IDX.value,
                       WebsiteIdx.REUTERS_IDX.value]
 
-# TODO Comment for testing
-# # Prompt using keyword
-# inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
-# while inputOpt.lower() != "y" and inputOpt.lower() != "n":
-#     inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
-# if inputOpt == "y":
-#     # Using keywords
-#     inputOpt = input("Có sử dụng các keyword đã định nghĩa sẵn trong input/keyword.csv? [y/n]:")
-#     while inputOpt.lower() != "y" and inputOpt.lower() != "n":
-#         inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
-#     # Using predefined keywords
-#     if inputOpt == "y":
-#         with open("./input/keywords.csv", "rt", encoding="utf-8") as tmp:
-#             reader = csv.reader(tmp)
-#             for row in reader:
-#                 keyword.append(str(row[0]))
-#     # Manual adding keywords
-#     else:
-#         while True:
-#             inputOpt = input("Hãy nhập các keyword, kết thúc keyword bằng Enter,"
-#                               + "hoàn thành việc nhập bằng cách nhập từ \"end\":")
-#             if inputOpt.lower() == "end":
-#                 break
-#             keyword.append(inputOpt)
+# Prompt using keyword
+inputOpt = input("Bạn có muốn sử dụng keyword? [y/n]:")
+while inputOpt.lower() != "y" and inputOpt.lower() != "n":
+    inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
+if inputOpt == "y":
+    # Using keywords
+    inputOpt = input("Có sử dụng các keyword đã định nghĩa sẵn trong input/keyword.csv? [y/n]:")
+    while inputOpt.lower() != "y" and inputOpt.lower() != "n":
+        inputOpt = input("Hãy nhập lại lựa chọn [y/n]:")
+    # Using predefined keywords
+    if inputOpt == "y":
+        with open("./input/keywords.csv", "rt", encoding="utf-8") as tmp:
+            reader = csv.reader(tmp)
+            for row in reader:
+                keyword.append(str(row[0]))
+    # Manual adding keywords
+    else:
+        while True:
+            inputOpt = input("Hãy nhập các keyword, kết thúc keyword bằng Enter,"
+                              + "hoàn thành việc nhập bằng cách nhập từ \"end\":")
+            if inputOpt.lower() == "end":
+                break
+            keyword.append(inputOpt)
 
 # Create crawling process (with setting)
 settings = get_project_settings()
@@ -275,7 +274,6 @@ if WebsiteIdx.VCSC_IDX.value in reqOpt:
 # News
 # Vietnamese websites
 if WebsiteIdx.BAOCONGTHUONG_IDX.value in reqOpt:
-    # TODO Entire page?
     baocongthuong_spider = BaoCongThuongSpider(kw=keyword)
     # noinspection PyTypeChecker
     process.crawl(baocongthuong_spider, kw=keyword)
