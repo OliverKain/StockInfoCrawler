@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import Request
-from commons.is_in_filtered_time import is_in_filtered_time
 from commons.is_in_filtered_time import get_formatted_past_date
 
 
