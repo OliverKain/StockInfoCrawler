@@ -44,7 +44,6 @@ class BscSpider(scrapy.Spider):
                 url="my HTML string",
                 body=article.xpath("./Description/text()").extract_first(),
                 encoding='utf-8')
-            init_res.xpath("//p//text()")
             article_detail = {"title": article.xpath("./Title/text()").extract_first().strip(),
                               "time": article.xpath("./Date/text()").extract_first().strip()[:10].replace("-", "/"),
                               "init": "".join(init_res.xpath("//p//text()").extract()).strip(),
