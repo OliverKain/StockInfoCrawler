@@ -5,3 +5,5 @@ data/
 input/
 .vscode/
 stats/holding\.csv
+
+log
