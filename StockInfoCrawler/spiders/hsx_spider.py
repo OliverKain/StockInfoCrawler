@@ -49,4 +49,3 @@ class HsxSpider(scrapy.Spider):
 
 def get_time(time_str):
     return time_str[6:10] + "/" + time_str[3:5] + "/" + time_str[0:2]
-
