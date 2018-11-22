@@ -77,7 +77,7 @@ class ForbesVietNamSpider(scrapy.Spider):
                 break
         if match_flg:
             article_detail = response.meta.get("article_detail")
-            init_xpath = "//div[@class='sapo_detail cms-desc']/strong/p/text()"
+            init_xpath = "//div[@class='sapo_detail cms-desc']/strong//text()"
             article_detail["init"] = str(response.selector.xpath(init_xpath).extract_first())
             yield article_detail
             pass
