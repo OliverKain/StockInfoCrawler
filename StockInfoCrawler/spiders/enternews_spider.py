@@ -16,9 +16,11 @@ class EnterNewsSpider(scrapy.Spider):
     top_item_title_xpath = "./div/div/h1/a/text()"
     top_item_init_xpath = "./p/text()"
     top_item_link_xpath = "./div/div/h1/a/@href"
-    top_list_xpath = "//div[@id='top-news-scroll']/ul[@class='list-text']/li"
-    top_list_item_title_xpath = "./div[@class='post-info']/a[@class='font-16']/strong/text()"
-    top_list_item_link_xpath = "./div[@class='post-info']/a[@class='font-16']/@href"
+    # 2018/11/22-START-Myhq-REMOVED: Redundant scraped item
+    # top_list_xpath = "//div[@id='top-news-scroll']/ul[@class='list-text']/li"
+    # top_list_item_title_xpath = "./div[@class='post-info']/a[@class='font-16']/strong/text()"
+    # top_list_item_link_xpath = "./div[@class='post-info']/a[@class='font-16']/@href"
+    # 2018/11/22-START-Myhq-REMOVED: Redundant scraped item
     list_xpath = "//ul[@class='feed']/li"
     list_item_title_xpath = "./h2/a/text()"
     list_item_time_xpath = "./p[@class='timer mt-5']//text()"
@@ -50,7 +52,10 @@ class EnterNewsSpider(scrapy.Spider):
             top_item_link = top_item.xpath(self.top_item_link_xpath).extract_first().strip()
             article_detail = {"title": top_item.xpath(self.top_item_title_xpath).extract_first().strip(),
                               "time": date.today().strftime("%Y/%m/%d"),
-                              "init": "",
+                              # 2018/11/22-START-Myhq-MODIFIED: Redundant scraped item
+                              # "init": "",
+                              "init": top_item.xpath(self.top_item_init_xpath).extract_first().strip(),
+                              # 2018/11/22-END-Myhq-MODIFIED: Redundant scraped item
                               "link": top_item_link}
             if self.keyword:
                 yield Request(url=top_item_link, callback=self.examine_article,
@@ -58,21 +63,23 @@ class EnterNewsSpider(scrapy.Spider):
                                     "keyword": self.keyword})
             else:
                 yield article_detail
-            # Get top list
-            top_list = response.selector.xpath(self.top_list_xpath)
-            top_list_item_link = ""
-            for item in top_list:
-                top_list_item_link = item.xpath(self.top_list_item_link_xpath).extract_first().strip()
-                article_detail = {"title": item.xpath(self.top_list_item_title_xpath).extract_first().strip(),
-                                  "time": date.today().strftime("%Y/%m/%d"),
-                                  "init": "",
-                                  "link": top_list_item_link}
-            if self.keyword:
-                yield Request(url=top_list_item_link, callback=self.examine_article,
-                              meta={"article_detail": article_detail,
-                                    "keyword": self.keyword})
-            else:
-                yield article_detail
+            # 2018/11/22-START-Myhq-REMOVED: Redundant scraped item
+            # # Get top list
+            # top_list = response.selector.xpath(self.top_list_xpath)
+            # top_list_item_link = ""
+            # for item in top_list:
+            #     top_list_item_link = item.xpath(self.top_list_item_link_xpath).extract_first().strip()
+            #     article_detail = {"title": item.xpath(self.top_list_item_title_xpath).extract_first().strip(),
+            #                       "time": date.today().strftime("%Y/%m/%d"),
+            #                       "init": "",
+            #                       "link": top_list_item_link}
+            # if self.keyword:
+            #     yield Request(url=top_list_item_link, callback=self.examine_article,
+            #                   meta={"article_detail": article_detail,
+            #                         "keyword": self.keyword})
+            # else:
+            #     yield article_detail
+            # 2018/11/22-END-Myhq-REMOVED: Redundant scraped item
 
         # Get article in list
         article_list = response.selector.xpath(self.list_xpath)
@@ -96,14 +103,18 @@ class EnterNewsSpider(scrapy.Spider):
     @staticmethod
     def examine_article(response):
         article_content_xpath = "//article[@id='detail-content']/div[@class='post-content ']/p"
-        article_init_xpath = "//article[@id='detail-content']/div[2]/h2/strong/text()"
+        # 2018/11/22-START-Myhq-REMOVED: Redundant scraped item
+        # article_init_xpath = "//article[@id='detail-content']/div[2]/h2/strong/text()"
+        # 2018/11/22-END-Myhq-REMOVED: Redundant scraped item
         article_detail = response.meta.get("article_detail")
-        article_detail["init"] = response.selector.xpath(article_init_xpath).extract_first().strip()
+        # 2018/11/22-START-Myhq-REMOVED: Redundant scraped item
+        # article_detail["init"] = response.selector.xpath(article_init_xpath).extract_first().strip()
+        # 2018/11/22-END-Myhq-REMOVED: Redundant scraped item
 
         keyword_list = response.meta.get("keyword")
         match_flg = True
         article_content = response.selector.xpath(article_content_xpath)
-        
+
         for kw in keyword_list:
             for paragraph in article_content:
                 paragraph_content = str(paragraph.xpath(".//text()").extract_first())
